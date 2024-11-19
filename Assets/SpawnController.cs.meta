@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: dc82fc0d62a7ab04c94b528a45ae9a04
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - playerPrefab: {fileID: 4983424528274352580, guid: 70b4e818a47dc9c46b88713603218abe, type: 3}
+  - enemyPrefab: {fileID: 8666919679963899023, guid: 5cf2d5cb3679207489243ed756a26add, type: 3}
+  - drunkardsWalkInstance: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
