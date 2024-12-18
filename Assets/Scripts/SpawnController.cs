@@ -11,6 +11,7 @@ public class SpawnController : MonoBehaviour
     public DrunkardsWalk drunkardsWalkInstance;
     public LevelManager levelManager;
     public PlayerController playerController;
+    public static GameObject player;
     private List<GameObject> spawnedEnemies = new List<GameObject>();
     private List<Vector3> enemySpawnPositions = new List<Vector3>();
     private List<Vector3> itemSpawnPositions = new List<Vector3>();
@@ -70,13 +71,13 @@ public class SpawnController : MonoBehaviour
                     Vector3 position = GridToWorldPosition(x, y);
                     Vector3 spawnRadius = new Vector3(1.5f, 0, 1.5f);
                     Debug.Log("Überprüfte Position: (" + x + ", " + y + ") - Status: " + (drunkardsWalkInstance.grid[x, y] == 0 ? "Begehbar" : "Blockiert"));
-                    Debug.DrawLine(position, position + Vector3.up, Color.blue, 20f);
+                    //Debug.DrawLine(position, position + Vector3.up, Color.blue, 20f);
                     if (IsAreaClear(position, spawnRadius))
                     {
                         enemySpawnPositions.Add(position);
                         itemSpawnPositions.Add(position);
                         Debug.Log("Begehbare Position hinzugefügt: " + position);
-                        Debug.DrawLine(position, position + Vector3.up, Color.red, 20f);
+                        //Debug.DrawLine(position, position + Vector3.up, Color.red, 20f);
                     }
                     else
                     {
@@ -144,7 +145,7 @@ public class SpawnController : MonoBehaviour
                 int randomIndex = Random.Range(0, enemySpawnPositions.Count);
                 Vector3 playerPos = enemySpawnPositions[randomIndex];
 
-                GameObject player = Instantiate(playerPrefab, playerPos, Quaternion.identity);
+                player = Instantiate(playerPrefab, playerPos, Quaternion.identity);
 
                 if (levelManager != null)
                 {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Unity.AI.Navigation;
 
 public class LevelManager : MonoBehaviour
 {
@@ -19,7 +20,7 @@ public class LevelManager : MonoBehaviour
     private int remainingEnemies;
     public GameObject levelDonePanel;
     public GameObject hudPanel;
-    //public static Camera MainCamera { get; private set; }
+    public GameObject gameFinishedPanel;
     public static Camera MainCamera;
     public Inventory playerInventory;
     public MenuManager menuManager;
@@ -30,10 +31,11 @@ public class LevelManager : MonoBehaviour
     public int tempAmmoCount;
     public int tempBandagesCount;
     public int tempHealth;
+    public NavMeshSurface navMeshSurface;
 
     private void Start()
     {
-        enemyCount = Random.Range(5, 5);
+        enemyCount = Random.Range(5, 15);
         ammoCount = 10;
         bandagesCount = 10;
         deathScreen.SetActive(false);
@@ -46,7 +48,6 @@ public class LevelManager : MonoBehaviour
 
         Debug.Log("level " + currentLevel + " wird initialisiert");
         Time.timeScale = 1;
-        //LoadGame();
         spawnController.DeleteCollectables();
         spawnController.DespawnPlayer();
         dungeonGenerator.GenerateGrid();
@@ -55,10 +56,20 @@ public class LevelManager : MonoBehaviour
         spawnController.Initialize(dungeonGenerator);
         spawnController.ClearPreviousSpawns();
         spawnController.CollectSpawnPositions(enemyCount, ammoCount);
-        spawnController.SpawnEnemies(enemyCount);
+        spawnController.SpawnPlayer();
         spawnController.SpawnAmmo(ammoCount);
         spawnController.SpawnBandages(bandagesCount);
-        spawnController.SpawnPlayer();
+        spawnController.SpawnEnemies(enemyCount);
+        
+        navMeshSurface.BuildNavMesh();
+        if (navMeshSurface != null)
+        {
+            Debug.Log("navmesh wurde neu gebacken");
+        }
+        else
+        {
+            Debug.LogError("navmesh ist nicht zugewiesen");
+        }
         playerInventory = GameObject.FindObjectOfType<Inventory>();
         playerHealth = GameObject.FindObjectOfType<PlayerHealth>();
         playerHealthBar = GameObject.FindObjectOfType<PlayerHealthBar>();
@@ -153,7 +164,10 @@ public class LevelManager : MonoBehaviour
         if (remainingEnemies == 0)
         {
             Debug.Log("Alle Gegner besiegt");
-
+            if (currentLevel == 2)
+            {
+                ShowGameFinishedPanel();
+            }
             ShowLevelDonePanel();
         }
     }
@@ -171,6 +185,21 @@ public class LevelManager : MonoBehaviour
             Debug.LogError("Level-Done-Panel ist nicht zugewiesen!");
         }
     }
+
+    public void ShowGameFinishedPanel()
+    {
+        if (gameFinishedPanel != null)
+        {
+            gameFinishedPanel.SetActive(true);
+            Time.timeScale = 0;
+            playerController.DisableMovementAndShowCursor();
+        }
+        else
+        {
+            Debug.LogError("game-finished-panel ist nicht zugewiesen!");
+        }
+    }
+
 
     public void StartNextLevel()
     {

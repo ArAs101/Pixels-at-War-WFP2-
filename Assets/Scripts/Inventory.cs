@@ -19,16 +19,14 @@ public class Inventory : MonoBehaviour
    
     private void Start()
     {
-        LoadCurrentInventory();
-        // Verstecke das Inventar beim Start
+        LoadCurrentInventory();       
         inventoryPanel.SetActive(false);
         UpdateInventoryDisplay();
-        //LoadInventory();
     }
 
     private void Update()
     {
-        // Inventar anzeigen/verstecken, wenn die Taste E gedrückt wird
+        // Inventar anzeigen/verstecken
         if (Input.GetKeyDown(KeyCode.E))
         {
             ToggleInventory();
@@ -39,11 +37,13 @@ public class Inventory : MonoBehaviour
     {
         bool isActive = inventoryPanel.activeSelf;
         inventoryPanel.SetActive(!isActive);
-        playerController.DisableMovement();
+        playerController.DisableMovementAndShowCursor();
+        
 
-        if (!isActive)
+        if (isActive)
         {
             UpdateInventoryDisplay();
+            playerController.EnableMovement();
         }
     }
 
@@ -51,14 +51,8 @@ public class Inventory : MonoBehaviour
     {
         bandagesText.text =  bandagesCurrentlyInInventory.ToString();
         ammoText.text = ammoCurrentlyInInventory.ToString();
+        //Cursor.lockState = CursorLockMode.Locked;
     }
-
-    /*public void SetInventory(int ammo, int bandages)
-    {
-        this.ammoCurrentlyInInventory = ammoCurrentlyInInventory;
-        this.bandagesCurrentlyInInventory = bandagesCurrentlyInInventory;
-        UpdateInventoryDisplay();
-    }*/
 
     public void LoadCurrentInventory()
     {
