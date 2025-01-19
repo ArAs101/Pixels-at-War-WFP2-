@@ -11,33 +11,37 @@ public class LevelManager : MonoBehaviour
     public SpawnController spawnController;
     public PlayerController playerController;
     public int currentLevel;
-    [SerializeField]
     private int enemyCount;
-    [SerializeField]
     private int ammoCount;
-    [SerializeField]
     private int bandagesCount;
+    private int coinsCount;
     private int remainingEnemies;
     public GameObject levelDonePanel;
     public GameObject hudPanel;
     public GameObject gameFinishedPanel;
-    public static Camera MainCamera;
+    //public static Camera MainCamera;
     public Inventory playerInventory;
     public MenuManager menuManager;
     public GameObject deathScreen;
     public PlayerHealthBar playerHealthBar;
     public PlayerHealth playerHealth;
     public TextMeshProUGUI levelIndicator;
-    public int tempAmmoCount;
-    public int tempBandagesCount;
-    public int tempHealth;
+    private int savedAmmoCount;
+    private int savedBandagesCount;
+    //private int tempHealth;
+    private int savedCoins;
+    private int savedLoadedAmmo;
+    private int savedFireRateLevel;
+    private Gun gun;
     public NavMeshSurface navMeshSurface;
 
     private void Start()
     {
         enemyCount = Random.Range(5, 15);
+        enemyCount = enemyCount % 2 == 0 ? enemyCount : enemyCount + 1;
         ammoCount = 10;
         bandagesCount = 10;
+        coinsCount = 25;
         deathScreen.SetActive(false);
         StartCoroutine(InitializeLevel(currentLevel));
     }
@@ -49,7 +53,7 @@ public class LevelManager : MonoBehaviour
         Debug.Log("level " + currentLevel + " wird initialisiert");
         Time.timeScale = 1;
         spawnController.DeleteCollectables();
-        spawnController.DespawnPlayer();
+        //spawnController.DespawnPlayer();
         dungeonGenerator.GenerateGrid();
         dungeonGenerator.GenerateDrunkardsWalk();
         dungeonGenerator.DrawDungeon();
@@ -59,64 +63,71 @@ public class LevelManager : MonoBehaviour
         spawnController.SpawnPlayer();
         spawnController.SpawnAmmo(ammoCount);
         spawnController.SpawnBandages(bandagesCount);
+        spawnController.SpawnCoins(coinsCount);
         spawnController.SpawnEnemies(enemyCount);
-        
         navMeshSurface.BuildNavMesh();
-        if (navMeshSurface != null)
-        {
-            Debug.Log("navmesh wurde neu gebacken");
-        }
-        else
-        {
-            Debug.LogError("navmesh ist nicht zugewiesen");
-        }
+        
         playerInventory = GameObject.FindObjectOfType<Inventory>();
         playerHealth = GameObject.FindObjectOfType<PlayerHealth>();
         playerHealthBar = GameObject.FindObjectOfType<PlayerHealthBar>();
+        gun = GameObject.FindObjectOfType<Gun>();
         yield return new WaitForEndOfFrame();
 
         if (PlayerPrefs.HasKey("CheckpointLevel"))
         {
+            Debug.Log(PlayerPrefs.GetInt("CheckpointAmmo") + " kugeln im inventar, bandagen: " + PlayerPrefs.GetInt("CheckpointBandages") + ", gesundheit: "
+            + playerHealth.currentHealth + ", münzen: " + PlayerPrefs.GetInt("CheckpointCoins") + ", im magazin: " + PlayerPrefs.GetInt("CheckpointLoadedAmmo") +
+            ", feuergeschwindigkeitslevel: " + PlayerPrefs.GetInt("CheckpointFireRateLevel"));
             LoadCheckpoint();
-        }
-
-        if (PlayerPrefs.HasKey("CheckpointHealth") && playerHealth != null)
-        {
-            playerInventory.ammoCurrentlyInInventory = PlayerPrefs.GetInt("CheckpointAmmo");
-            playerInventory.bandagesCurrentlyInInventory = PlayerPrefs.GetInt("CheckpointBandages");
-            playerHealth.currentHealth = PlayerPrefs.GetInt("CheckpointHealth");
-            playerHealth.UpdateHealthBar(playerHealth.currentHealth);
-            Debug.Log("gesundheit für level " + currentLevel + " geladen: " + playerHealth.currentHealth);
         }
         else
         {
-            Debug.Log("keine gespeicherte gesundheit gefunden");
+            Debug.Log("keinen gespeicherten spielstand gefunden. starte neues spiel");
+            //SaveCheckpoint();
         }
+        
         levelIndicator.text = "Level " + currentLevel;
         Debug.Log("Level " + currentLevel + " gestartet");
+
+        Debug.Log("zu beginn des jeweiligen levels im levelmanager: " + playerInventory.ammoCurrentlyInInventory + " kugeln im inventar, bandagen: " + playerInventory.bandagesCurrentlyInInventory + ", gesundheit: "
+            + playerHealth.currentHealth + ", münzen: " + playerInventory.coinsCurrentlyInInventory + ", im magazin: " + playerInventory.ammoInLoadedMagazine + "im magazin: " + gun.currentAmmoInMagazine);
     }
 
     public void SaveCheckpoint()
     {
-        PlayerPrefs.SetInt("CheckpointLevel", currentLevel);
-        PlayerPrefs.SetInt("CheckpointAmmo", playerInventory.ammoCurrentlyInInventory);
-        PlayerPrefs.SetInt("CheckpointBandages", playerInventory.bandagesCurrentlyInInventory);
-        PlayerPrefs.SetInt("CheckpointHealth", playerHealth.currentHealth);
-        PlayerPrefs.Save();
-        Debug.Log("checkpoint gespeichert: level " + currentLevel + ", munition: " + tempAmmoCount + ", bandagen: " + tempBandagesCount + ", gesundheit: " + playerHealth.currentHealth);
+        if (playerInventory != null)
+        {
+            PlayerPrefs.SetInt("CheckpointLevel", currentLevel);
+            PlayerPrefs.SetInt("CheckpointAmmo", playerInventory.ammoCurrentlyInInventory);
+            PlayerPrefs.SetInt("CheckpointBandages", playerInventory.bandagesCurrentlyInInventory);
+            PlayerPrefs.SetInt("CheckpointHealth", playerHealth.currentHealth);
+            PlayerPrefs.SetInt("CheckpointCoins", playerInventory.coinsCurrentlyInInventory);
+            PlayerPrefs.SetInt("CheckpointLoadedAmmo", gun.currentAmmoInMagazine);
+            PlayerPrefs.SetInt("CheckpointFireRateLevel", int.Parse(playerInventory.fireRateLevelText.text));
+            PlayerPrefs.Save();
+            Debug.Log("checkpoint gespeichert: level " + currentLevel + ", munition: " + playerInventory.ammoCurrentlyInInventory + "," + " bandagen: " + playerInventory.bandagesCurrentlyInInventory + ", gesundheit: "
+                + playerHealth.currentHealth + ", münzen: " + playerInventory.coinsCurrentlyInInventory + ", im magazin: " + playerInventory.ammoInLoadedMagazine + ", feuergeschwindigkeitslevel: " + playerInventory.fireRateLevelText.text);
+        }
+        else
+        {
+            Debug.LogError("inventar in savecheckpoint nicht gefunden");
+        }
     }
 
     public void LoadCheckpoint()
     {
         if (PlayerPrefs.HasKey("CheckpointLevel"))
         {
-            int checkpointHealth = PlayerPrefs.GetInt("CheckpointHealth");
             currentLevel = PlayerPrefs.GetInt("CheckpointLevel");
-            tempAmmoCount = PlayerPrefs.GetInt("CheckpointAmmo");
-            tempBandagesCount = PlayerPrefs.GetInt("CheckpointBandages");
+            savedAmmoCount = PlayerPrefs.GetInt("CheckpointAmmo");
+            savedBandagesCount = PlayerPrefs.GetInt("CheckpointBandages");
             playerHealth.currentHealth = PlayerPrefs.GetInt("CheckpointHealth");
+            savedCoins = PlayerPrefs.GetInt("CheckpointCoins");
+            savedLoadedAmmo = PlayerPrefs.GetInt("CheckpointLoadedAmmo");
             playerHealth.UpdateHealthBar(playerHealth.currentHealth);
-            Debug.Log("checkpoint gespeichert: level " + currentLevel + ", munition: " + tempAmmoCount + ", bandagen: " + tempBandagesCount + ", gesundheit: " + playerHealth.currentHealth);
+            savedFireRateLevel = PlayerPrefs.GetInt("CheckpointFireRateLevel", int.Parse(playerInventory.fireRateLevelText.text));
+            Debug.Log("checkpoint geladen: level " + currentLevel + ", munition: " + savedAmmoCount + ", bandagen: " + savedBandagesCount + ", gesundheit: " + playerHealth.currentHealth + ", münzen: " + savedCoins
+                + ", im magazin: " + savedLoadedAmmo + ", feuergeschwindigkeitslevel: " + savedFireRateLevel);
         }
         else
         {
@@ -164,11 +175,14 @@ public class LevelManager : MonoBehaviour
         if (remainingEnemies == 0)
         {
             Debug.Log("Alle Gegner besiegt");
-            if (currentLevel == 2)
+            if (currentLevel == 3)
             {
                 ShowGameFinishedPanel();
             }
-            ShowLevelDonePanel();
+            else
+            {
+                ShowLevelDonePanel();
+            }
         }
     }
 
@@ -193,6 +207,7 @@ public class LevelManager : MonoBehaviour
             gameFinishedPanel.SetActive(true);
             Time.timeScale = 0;
             playerController.DisableMovementAndShowCursor();
+            //SaveCheckpoint();
         }
         else
         {
@@ -218,7 +233,19 @@ public class LevelManager : MonoBehaviour
     {
         Debug.Log("starte level neu...");
         deathScreen.SetActive(false);
-        LoadCheckpoint();
+        if (PlayerPrefs.HasKey("CheckpointLevel"))
+        {
+            Debug.Log(PlayerPrefs.GetInt("CheckpointAmmo") + " kugeln im inventar, bandagen: " + PlayerPrefs.GetInt("CheckpointBandages") + ", gesundheit: "
+            + playerHealth.currentHealth + ", münzen: " + PlayerPrefs.GetInt("CheckpointCoins") + ", im magazin: " + PlayerPrefs.GetInt("CheckpointLoadedAmmo"));
+            LoadCheckpoint();
+        }
+        else
+        {
+            Debug.Log("kein checkpointlevel gefunden");
+        }
+
+        Debug.Log("in restartmethode: " + playerInventory.ammoCurrentlyInInventory + " kugeln im inventar, bandagen: " + playerInventory.bandagesCurrentlyInInventory + ", gesundheit: " 
+            + playerHealth.currentHealth + ", münzen: " + playerInventory.coinsCurrentlyInInventory + ", im magazin: " + playerInventory.ammoInLoadedMagazine);
         StartCoroutine(InitializeLevel(currentLevel));
     }
 }

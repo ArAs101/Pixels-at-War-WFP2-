@@ -8,7 +8,7 @@ public class PlayerCollision : MonoBehaviour
     public Inventory playerInventory;
     [SerializeField]
     public GameObject gameObject;
-                int wait = 0;
+    int wait = 0;
 
     private void Start()
     {
@@ -33,10 +33,13 @@ public class PlayerCollision : MonoBehaviour
             {
                 int damageAmount = Random.Range(1, 5);
                 Debug.Log("Spieler erleidet " + damageAmount + " Schaden.");
-                if(wait > 10){
+                if (wait > 10)
+                {
                     wait = 0;
-                playerHealth.TakeDamage(damageAmount);
-                }else{
+                    playerHealth.TakeDamage(damageAmount);
+                }
+                else
+                {
                     wait++;
                 }
             }
@@ -60,19 +63,31 @@ public class PlayerCollision : MonoBehaviour
                 playerInventory.AddBandages(1);
                 Destroy(other.gameObject);
             }
+
+            if (other.CompareTag("Coins"))
+            {
+                Debug.Log("coin berührt");
+                playerInventory.AddCoin(1);
+                Destroy(other.gameObject);
+            }
+
+            if (other.CompareTag("Fire"))
+            {
+                Debug.Log("Spieler hat einen Feuerball berührt!");
+                PlayerHealth playerHealth = GetComponent<PlayerHealth>();
+
+                if (playerHealth != null)
+                {
+                    int damageAmount = Random.Range(5, 10);
+                    Debug.Log("Spieler erleidet " + damageAmount + " Schaden.");
+                    playerHealth.TakeDamage(damageAmount);
+                    Destroy(other.gameObject);
+                }
+                else
+                {
+                    Debug.LogWarning("PlayerHealth-Komponente nicht gefunden!");
+                }
+            }
         }
     }
-
-    private void WaitMethod()
-    {
-        //WaitForSeconds(0.5);
-    }
-
-    /*void OnTriggerEnter(Collider other)
-    {
-        
-    
-        
-
-    }*/
 }

@@ -22,12 +22,12 @@ public class DrunkardsWalk : MonoBehaviour
 
     void Start()
     {
-        Debug.Log("start in dw");
+        //Debug.Log("start in dw");
         //grid = new int[width, height];
         GenerateGrid();
         if (grid == null)
         {
-            Debug.LogError("grid ist null");
+            //Debug.LogError("grid ist null");
             return;
         }
 
@@ -51,8 +51,8 @@ public class DrunkardsWalk : MonoBehaviour
                 grid[x, y] = 1; // 1 bedeutet Wand
             }
         }
-        Debug.Log("generategrid vorbei");
-        DungeonOutput();
+        //Debug.Log("generategrid vorbei");
+        //DungeonOutput();
     }
 
     public void DungeonOutput()

@@ -1,32 +1,55 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class Inventory : MonoBehaviour
 {
-    public int bandagesCurrentlyInInventory = 0;
-    public int ammoCurrentlyInInventory = 0;
-    private int savedBandages;
-    private int savedAmmo;
-
+    public int bandagesCurrentlyInInventory;
+    public int ammoCurrentlyInInventory;
+    public int coinsCurrentlyInInventory;
+    //private int savedBandages;
+    //private int savedAmmo;
+    //private int savedCoins;
     public GameObject inventoryPanel;
     public TextMeshProUGUI bandagesText;
     public TextMeshProUGUI ammoText;
+    public TextMeshProUGUI coinsText;
     public PlayerController playerController;
     public TextMeshProUGUI ammoFraction;
+    public int ammoInLoadedMagazine;
+    public Gun gun;
     public LevelManager levelManager;
+    public TextMeshProUGUI fireRateLevelText;
+    public Button fireRateUpgradeButton;
+    public TextMeshProUGUI gunControl;
+    public Button gunControlUpgradeButton;
     public static Inventory Instance {  get; private set; }
 
    
+private void Awake(){
+    fireRateLevelText.text = "0";
+    gunControl.text = "0";
+}
+
     private void Start()
     {
-        LoadCurrentInventory();       
+        gun = FindObjectOfType<Gun>();
+        if (PlayerPrefs.HasKey("CheckpointLevel"))
+        {
+            LoadCurrentInventory();
+        }
+        else
+        {
+            ResetInventory();
+            //Debug.Log("keinen spielstand gefunden. setze inventar zurück");
+        }
+
         inventoryPanel.SetActive(false);
-        UpdateInventoryDisplay();
+        UpdateInventoryDisplay();        
     }
 
     private void Update()
-    {
-        // Inventar anzeigen/verstecken
+    {        
         if (Input.GetKeyDown(KeyCode.E))
         {
             ToggleInventory();
@@ -38,27 +61,31 @@ public class Inventory : MonoBehaviour
         bool isActive = inventoryPanel.activeSelf;
         inventoryPanel.SetActive(!isActive);
         playerController.DisableMovementAndShowCursor();
-        
+        Time.timeScale = 0f;
+        UpdateInventoryDisplay();
 
         if (isActive)
-        {
-            UpdateInventoryDisplay();
+        {  
             playerController.EnableMovement();
+            Time.timeScale = 1f;
         }
     }
 
-    private void UpdateInventoryDisplay()
+    public void UpdateInventoryDisplay()
     {
-        bandagesText.text =  bandagesCurrentlyInInventory.ToString();
+        bandagesText.text = bandagesCurrentlyInInventory.ToString();
         ammoText.text = ammoCurrentlyInInventory.ToString();
-        //Cursor.lockState = CursorLockMode.Locked;
+        coinsText.text = coinsCurrentlyInInventory.ToString();
     }
 
     public void LoadCurrentInventory()
     {
-        ammoCurrentlyInInventory = PlayerPrefs.GetInt("CurrentAmmo", 0);
-        bandagesCurrentlyInInventory = PlayerPrefs.GetInt("CurrentBandages", 0);
-        UpdateInventoryDisplay();
+        ammoCurrentlyInInventory = PlayerPrefs.GetInt("CheckpointAmmo");
+        bandagesCurrentlyInInventory = PlayerPrefs.GetInt("CheckpointBandages");
+        coinsCurrentlyInInventory = PlayerPrefs.GetInt("CheckpointCoins");
+        //ammoInLoadedMagazine = PlayerPrefs.GetInt("CheckpointLoadedAmmo");
+        Debug.Log("lade inventar: " + ammoCurrentlyInInventory + " kugeln im inventar, " + bandagesCurrentlyInInventory + " bandagen im inventar, " + coinsCurrentlyInInventory + " münzen im inventar");
+        //UpdateInventoryDisplay();
     }
 
     public void AddBandages(int amount)
@@ -68,33 +95,28 @@ public class Inventory : MonoBehaviour
         UpdateInventoryDisplay();        
     }
 
+    public void AddCoin(int amount)
+    {
+        Debug.Log("addcoin aufgerufen");
+        coinsCurrentlyInInventory += amount;
+        UpdateInventoryDisplay();
+    }
+
     public void AddAmmo(int amount)
     {
         Debug.Log("addammo aufgerufen");
-        ammoCurrentlyInInventory += amount;
+        ammoCurrentlyInInventory += amount;        
         UpdateInventoryDisplay();
-        //ammoFraction.text.Insert(2, ammoCurrentlyInInventory.ToString());
+        gun.UpdateAmmoFraction();
     }
-
-    /*public void SaveInventory()
-    {
-        savedBandages = bandagesCurrentlyInInventory;
-        savedAmmo = ammoCurrentlyInInventory;
-        Debug.Log("inventar gespeichert: " + bandagesCurrentlyInInventory + " Bandagen, " + ammoCurrentlyInInventory + " Munition");
-    }
-
-    public void LoadInventory()
-    {
-        bandagesCurrentlyInInventory = PlayerPrefs.GetInt("Bandages", 0);
-        ammoCurrentlyInInventory = PlayerPrefs.GetInt("Ammo", 0);
-        Debug.Log("inventar geladen: " + bandagesCurrentlyInInventory + " Bandagen, " + ammoCurrentlyInInventory + " Munition");
-    }*/
 
     public void ResetInventory()
     {
-        bandagesCurrentlyInInventory = savedBandages;
-        ammoCurrentlyInInventory = savedAmmo;
-        UpdateInventoryDisplay();
+        bandagesCurrentlyInInventory = 0;
+        ammoCurrentlyInInventory = 0;
+        coinsCurrentlyInInventory = 0;
+        //ammoInLoadedMagazine = 30;
+        //UpdateInventoryDisplay();
         Debug.Log("inventar zurückgesetzt");
     }
 }

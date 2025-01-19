@@ -10,6 +10,7 @@ TagManager:
   - Fire
   - Ammo
   - Bandages
+  - Coins
   layers:
   - Default
   - TransparentFX

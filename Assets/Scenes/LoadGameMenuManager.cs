@@ -25,7 +25,9 @@ public class LoadGameMenuManager : MonoBehaviour
             int savedAmmo = PlayerPrefs.GetInt("CheckpointAmmo");
             int savedBandages = PlayerPrefs.GetInt("CheckpointBandages");
             int savedHealth = PlayerPrefs.GetInt("CheckpointHealth");
-            savedGameText.text = $"Gespeicherter Spielstand: \nLevel {savedLevel}, \nMunition: {savedAmmo}, \nBandagen: {savedBandages}, \nGesundheit: {savedHealth}";
+            int savedCoins = PlayerPrefs.GetInt("CheckpointCoins");
+            int loadedAmmo = PlayerPrefs.GetInt("CheckpointLoadedAmmo");
+            savedGameText.text = $"Gespeicherter Spielstand: \nLevel {savedLevel}, \nMunition: {savedAmmo}, \nBandagen: {savedBandages}, \nGesundheit: {savedHealth}, \nMünzen: {savedCoins}, \nim magazin: {loadedAmmo}";
         }
         else
         {
@@ -41,13 +43,14 @@ public class LoadGameMenuManager : MonoBehaviour
             int health = PlayerPrefs.GetInt("CheckpointHealth");
             int ammo = PlayerPrefs.GetInt("CheckpointAmmo");
             int bandages = PlayerPrefs.GetInt("CheckpointBandages");
+            int coins = PlayerPrefs.GetInt("CheckpointCoins");
+            int loadedAmmo = PlayerPrefs.GetInt("CheckpointLoadedAmmo");
 
             LevelManager levelManager = FindObjectOfType<LevelManager>();
             if (levelManager != null)
             {
-                Debug.Log("Spielstand geladen: Level " + levelToLoad + ", Gesundheit " + health + ", Munition " + ammo + ", Bandagen " + bandages);
-                SceneManager.LoadScene("GameScene");
-                
+                Debug.Log("Spielstand geladen: Level " + levelToLoad + ", Gesundheit " + health + ", Munition " + ammo + ", Bandagen " + bandages + ", Münzen " + coins + ", im magazin " + loadedAmmo);
+                SceneManager.LoadScene("GameScene");                
             }
         }
         else
@@ -58,6 +61,6 @@ public class LoadGameMenuManager : MonoBehaviour
 
     public void BackToMainMenu()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenuWelcome");
+        SceneManager.LoadScene("MainMenuWelcome");
     }
 }

@@ -24,11 +24,11 @@ public class MenuManager : MonoBehaviour
     {
         if (scene.name == "GameScene" && playerInventory != null)
         {
-            playerInventory = GameObject.FindObjectOfType<Inventory>();
+            //playerInventory = GameObject.FindObjectOfType<Inventory>();
             playerController = GameObject.FindObjectOfType<PlayerController>();
             playerHealth = GameObject.FindObjectOfType<PlayerHealth>();
-                playerController.EnableMovement();
-                Debug.Log("Inventar zurückgesetzt und bewegung aktiviert nach Szenenwechsel.");
+            playerController.EnableMovement();
+            Debug.Log("Inventar zurückgesetzt und bewegung aktiviert nach Szenenwechsel.");
 
             if (isNewGame)
             {

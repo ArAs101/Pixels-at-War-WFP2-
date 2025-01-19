@@ -96,13 +96,12 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         OnHealthChange?.Invoke(currentHealth);
         if (currentHealth <= 0)
         {
-            //Death
             Debug.Log("death");
             levelManager.OnPlayerDeath();
         }
     }
 
-    public void Heal(int amount)
+    /*public void Heal(int amount)
     {
         currentHealth += amount;
         if (currentHealth > maxHealth)
@@ -110,5 +109,5 @@ public class PlayerHealth : MonoBehaviour, IDamageable
             currentHealth = maxHealth;
             Debug.Log("geheilt");
         }
-    }
+    }*/
 }

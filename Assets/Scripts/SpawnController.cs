@@ -5,9 +5,11 @@ using UnityEngine;
 public class SpawnController : MonoBehaviour
 {
     public GameObject playerPrefab;
-    public GameObject enemyPrefab;
+    public GameObject spikeyEnemyPrefab;
+    public GameObject fireyEnemyPrefab;
     public GameObject ammoPrefab;
     public GameObject bandagePrefab;
+    public GameObject coinPrefab;
     public DrunkardsWalk drunkardsWalkInstance;
     public LevelManager levelManager;
     public PlayerController playerController;
@@ -17,6 +19,7 @@ public class SpawnController : MonoBehaviour
     private List<Vector3> itemSpawnPositions = new List<Vector3>();
     private List<GameObject> ammoBoxes = new List<GameObject>();
     private List<GameObject> bandages = new List<GameObject>();
+    private List<GameObject> coins = new List<GameObject>();
 
 
     public void Initialize(DrunkardsWalk dwInstance)
@@ -70,32 +73,21 @@ public class SpawnController : MonoBehaviour
                 {
                     Vector3 position = GridToWorldPosition(x, y);
                     Vector3 spawnRadius = new Vector3(1.5f, 0, 1.5f);
-                    Debug.Log("Überprüfte Position: (" + x + ", " + y + ") - Status: " + (drunkardsWalkInstance.grid[x, y] == 0 ? "Begehbar" : "Blockiert"));
+                    //Debug.Log("Überprüfte Position: (" + x + ", " + y + ") - Status: " + (drunkardsWalkInstance.grid[x, y] == 0 ? "Begehbar" : "Blockiert"));
                     //Debug.DrawLine(position, position + Vector3.up, Color.blue, 20f);
                     if (IsAreaClear(position, spawnRadius))
                     {
                         enemySpawnPositions.Add(position);
                         itemSpawnPositions.Add(position);
-                        Debug.Log("Begehbare Position hinzugefügt: " + position);
+                        //Debug.Log("Begehbare Position hinzugefügt: " + position);
                         //Debug.DrawLine(position, position + Vector3.up, Color.red, 20f);
                     }
                     else
                     {
-                        Debug.Log("Position blockiert: " + position);
+                        //Debug.Log("Position blockiert: " + position);
                     }
                 }
             }
-        }
-    }
-
-    private void ShuffleList(List<Vector3> list)
-    {
-        for (int i = 0; i < list.Count; i++)
-        {
-            Vector3 temp = list[i];
-            int randomIndex = Random.Range(0, list.Count);
-            list[i] = list[randomIndex];
-            list[randomIndex] = temp;
         }
     }
 
@@ -103,7 +95,7 @@ public class SpawnController : MonoBehaviour
     {
         levelManager.SetEnemyCount(enemyCount);
 
-        for (int i = 0; i < enemyCount && enemySpawnPositions.Count > 0; i++)
+        for (int i = 0; i < enemyCount && enemySpawnPositions.Count > 0; i += 2)
         {
             if (enemySpawnPositions.Count == 0)
             {
@@ -112,13 +104,22 @@ public class SpawnController : MonoBehaviour
             }
 
             int randomIndex = Random.Range(0, enemySpawnPositions.Count);
-            Vector3 enemyPos = enemySpawnPositions[randomIndex];
+            Vector3 spikeyEnemyPos = enemySpawnPositions[0];
+            spikeyEnemyPos.y = 1.3f;
+            GameObject spikeyEnemy = Instantiate(spikeyEnemyPrefab, spikeyEnemyPos, Quaternion.identity);
+            spawnedEnemies.Add(spikeyEnemy);
+            //Debug.Log("Gegner gespawnt an: " + spikeyEnemyPos);
+            
+            spikeyEnemy.GetComponent<SpikeyEnemy>().levelManager = levelManager;
+
+            Vector3 enemyPos = enemySpawnPositions[1];
             enemyPos.y = 1.3f;
-            GameObject enemy = Instantiate(enemyPrefab, enemyPos, Quaternion.identity);
-            spawnedEnemies.Add(enemy);
-            Debug.Log("Gegner gespawnt an: " + enemyPos);
-            enemySpawnPositions.RemoveAt(randomIndex);
-            enemy.GetComponent<Enemy>().levelManager = levelManager;
+            GameObject fireyEnemy = Instantiate(fireyEnemyPrefab, enemyPos, Quaternion.identity);
+            spawnedEnemies.Add(fireyEnemy);
+            //Debug.Log("Gegner gespawnt an: " + enemyPos);
+            enemySpawnPositions.RemoveAt(0);
+            enemySpawnPositions.RemoveAt(1);
+            fireyEnemy.GetComponent<FireyEnemy>().levelManager = levelManager;
         }
     }
 
@@ -129,7 +130,7 @@ public class SpawnController : MonoBehaviour
         {
             if (collider.CompareTag("Wall"))
             {
-                Debug.Log("Kollidiert mit " + collider.tag + " bei: " + position);
+                //Debug.Log("Kollidiert mit " + collider.tag + " bei: " + position);
                 return false;
             }
         }
@@ -138,11 +139,11 @@ public class SpawnController : MonoBehaviour
 
     public void SpawnPlayer()
     {
-        if (playerPrefab != null)
+        int randomIndex = Random.Range(0, enemySpawnPositions.Count);
+        if (playerPrefab != null && player == null)
         {
             if (enemySpawnPositions.Count > 0)
             {
-                int randomIndex = Random.Range(0, enemySpawnPositions.Count);
                 Vector3 playerPos = enemySpawnPositions[randomIndex];
 
                 player = Instantiate(playerPrefab, playerPos, Quaternion.identity);
@@ -170,7 +171,8 @@ public class SpawnController : MonoBehaviour
         }
         else
         {
-            Debug.LogError("Player-Prefab ist nicht zugewiesen!");
+            player.transform.position = enemySpawnPositions[randomIndex];
+            //Debug.LogError("Player-Prefab ist nicht zugewiesen!");
         }
     }
 
@@ -202,10 +204,10 @@ public class SpawnController : MonoBehaviour
             }
             int randomIndex = Random.Range(0, itemSpawnPositions.Count);
             Vector3 ammoPos = itemSpawnPositions[randomIndex];
-            ammoPos.y = 0f;
+            //ammoPos.y = 0f;
             GameObject ammo = Instantiate(ammoPrefab, ammoPos, Quaternion.identity);
             ammoBoxes.Add(ammo);
-            Debug.Log("ammo gespawnt an Position: " + ammoPos);
+            //Debug.Log("ammo gespawnt an Position: " + ammoPos);
             itemSpawnPositions.RemoveAt(randomIndex);
         }
     }
@@ -224,10 +226,30 @@ public class SpawnController : MonoBehaviour
             bandagePos.y = 0f;
             GameObject bandage = Instantiate(bandagePrefab, bandagePos, Quaternion.identity);
             bandages.Add(bandage);
-            Debug.Log("bandage gespawnt an Position: " + bandagePos);
+            //Debug.Log("bandage gespawnt an Position: " + bandagePos);
             itemSpawnPositions.RemoveAt(randomIndex);
         }
     }
+
+    public void SpawnCoins(int coinsCount)
+    {
+        for (int i = 0; i < coinsCount && itemSpawnPositions.Count > 0; i++)
+        {
+            if (itemSpawnPositions.Count == 0)
+            {
+                Debug.LogWarning("Keine verfügbaren Spawn-Positionen für mehr bandagen");
+                break;
+            }
+            int randomIndex = Random.Range(0, itemSpawnPositions.Count);
+            Vector3 coinPos = itemSpawnPositions[randomIndex];
+            coinPos.y = 0.3f;
+            GameObject coin = Instantiate(coinPrefab, coinPos, Quaternion.identity);
+            coins.Add(coin);
+            //Debug.Log("coin gespawnt an Position: " + coinPos);
+            itemSpawnPositions.RemoveAt(randomIndex);
+        }
+    }
+
 
 
     public IEnumerator CheckAllEnemiesDead()
