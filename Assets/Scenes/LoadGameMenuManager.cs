@@ -9,11 +9,12 @@ public class LoadGameMenuManager : MonoBehaviour
     public TextMeshProUGUI savedGameText;
     private PlayerHealth playerHealth;
     private Inventory playerInventory;
-    public LevelManager levelManager;
+    private LevelManager levelManager;
 
     // Start is called before the first frame update
     void Start()
     {
+
         DisplaySavedGame();
     }
 
@@ -27,7 +28,10 @@ public class LoadGameMenuManager : MonoBehaviour
             int savedHealth = PlayerPrefs.GetInt("CheckpointHealth");
             int savedCoins = PlayerPrefs.GetInt("CheckpointCoins");
             int loadedAmmo = PlayerPrefs.GetInt("CheckpointLoadedAmmo");
-            savedGameText.text = $"Gespeicherter Spielstand: \nLevel {savedLevel}, \nMunition: {savedAmmo}, \nBandagen: {savedBandages}, \nGesundheit: {savedHealth}, \nMünzen: {savedCoins}, \nim magazin: {loadedAmmo}";
+            int savedFireRateLevel = PlayerPrefs.GetInt("CheckpointFireRateLevel");
+            int savedPrecisionLevel = PlayerPrefs.GetInt("CheckpointPrecisionLevel");
+            savedGameText.text = $"Gespeicherter Spielstand: \nLevel {savedLevel}, Munition: {savedAmmo}, Bandagen: {savedBandages}, Gesundheit: {savedHealth}, Münzen: {savedCoins}, im Magazin: {loadedAmmo}, " +
+                $"Feuergeschwindigkeit: Level {savedFireRateLevel}, Präzision: Level {savedPrecisionLevel}";
         }
         else
         {
@@ -45,11 +49,14 @@ public class LoadGameMenuManager : MonoBehaviour
             int bandages = PlayerPrefs.GetInt("CheckpointBandages");
             int coins = PlayerPrefs.GetInt("CheckpointCoins");
             int loadedAmmo = PlayerPrefs.GetInt("CheckpointLoadedAmmo");
+            int savedFireRateLevel = PlayerPrefs.GetInt("CheckpointFireRateLevel");
+            int savedPrecisionLevel = PlayerPrefs.GetInt("CheckpointPrecisionLevel");
 
             LevelManager levelManager = FindObjectOfType<LevelManager>();
             if (levelManager != null)
             {
-                Debug.Log("Spielstand geladen: Level " + levelToLoad + ", Gesundheit " + health + ", Munition " + ammo + ", Bandagen " + bandages + ", Münzen " + coins + ", im magazin " + loadedAmmo);
+                Debug.Log("Spielstand geladen: Level " + levelToLoad + ", Gesundheit " + health + ", Munition " + ammo + ", Bandagen " + bandages + ", Münzen " + coins + ", im magazin " + loadedAmmo +
+                    ", Feuergeschwindigkeit: Level " + savedFireRateLevel + ", Präzisionslevel: Level " + savedPrecisionLevel);
                 SceneManager.LoadScene("GameScene");                
             }
         }

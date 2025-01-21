@@ -69,23 +69,15 @@ public class SpawnController : MonoBehaviour
         {
             for (int y = 0; y < drunkardsWalkInstance.length; y++)
             {
-                if (drunkardsWalkInstance.grid[x, y] == 0) // Überprüfe, ob die Position als begehbar markiert ist
+                if (drunkardsWalkInstance.grid[x, y] == 0)
                 {
                     Vector3 position = GridToWorldPosition(x, y);
                     Vector3 spawnRadius = new Vector3(1.5f, 0, 1.5f);
-                    //Debug.Log("Überprüfte Position: (" + x + ", " + y + ") - Status: " + (drunkardsWalkInstance.grid[x, y] == 0 ? "Begehbar" : "Blockiert"));
-                    //Debug.DrawLine(position, position + Vector3.up, Color.blue, 20f);
                     if (IsAreaClear(position, spawnRadius))
                     {
                         enemySpawnPositions.Add(position);
                         itemSpawnPositions.Add(position);
-                        //Debug.Log("Begehbare Position hinzugefügt: " + position);
-                        //Debug.DrawLine(position, position + Vector3.up, Color.red, 20f);
-                    }
-                    else
-                    {
-                        //Debug.Log("Position blockiert: " + position);
-                    }
+                    }                    
                 }
             }
         }
@@ -108,7 +100,6 @@ public class SpawnController : MonoBehaviour
             spikeyEnemyPos.y = 1.3f;
             GameObject spikeyEnemy = Instantiate(spikeyEnemyPrefab, spikeyEnemyPos, Quaternion.identity);
             spawnedEnemies.Add(spikeyEnemy);
-            //Debug.Log("Gegner gespawnt an: " + spikeyEnemyPos);
             
             spikeyEnemy.GetComponent<SpikeyEnemy>().levelManager = levelManager;
 
@@ -116,7 +107,6 @@ public class SpawnController : MonoBehaviour
             enemyPos.y = 1.3f;
             GameObject fireyEnemy = Instantiate(fireyEnemyPrefab, enemyPos, Quaternion.identity);
             spawnedEnemies.Add(fireyEnemy);
-            //Debug.Log("Gegner gespawnt an: " + enemyPos);
             enemySpawnPositions.RemoveAt(0);
             enemySpawnPositions.RemoveAt(1);
             fireyEnemy.GetComponent<FireyEnemy>().levelManager = levelManager;
@@ -130,7 +120,6 @@ public class SpawnController : MonoBehaviour
         {
             if (collider.CompareTag("Wall"))
             {
-                //Debug.Log("Kollidiert mit " + collider.tag + " bei: " + position);
                 return false;
             }
         }
@@ -172,7 +161,6 @@ public class SpawnController : MonoBehaviour
         else
         {
             player.transform.position = enemySpawnPositions[randomIndex];
-            //Debug.LogError("Player-Prefab ist nicht zugewiesen!");
         }
     }
 
@@ -204,10 +192,8 @@ public class SpawnController : MonoBehaviour
             }
             int randomIndex = Random.Range(0, itemSpawnPositions.Count);
             Vector3 ammoPos = itemSpawnPositions[randomIndex];
-            //ammoPos.y = 0f;
             GameObject ammo = Instantiate(ammoPrefab, ammoPos, Quaternion.identity);
             ammoBoxes.Add(ammo);
-            //Debug.Log("ammo gespawnt an Position: " + ammoPos);
             itemSpawnPositions.RemoveAt(randomIndex);
         }
     }
@@ -226,7 +212,6 @@ public class SpawnController : MonoBehaviour
             bandagePos.y = 0f;
             GameObject bandage = Instantiate(bandagePrefab, bandagePos, Quaternion.identity);
             bandages.Add(bandage);
-            //Debug.Log("bandage gespawnt an Position: " + bandagePos);
             itemSpawnPositions.RemoveAt(randomIndex);
         }
     }
@@ -245,12 +230,9 @@ public class SpawnController : MonoBehaviour
             coinPos.y = 0.3f;
             GameObject coin = Instantiate(coinPrefab, coinPos, Quaternion.identity);
             coins.Add(coin);
-            //Debug.Log("coin gespawnt an Position: " + coinPos);
             itemSpawnPositions.RemoveAt(randomIndex);
         }
     }
-
-
 
     public IEnumerator CheckAllEnemiesDead()
     {

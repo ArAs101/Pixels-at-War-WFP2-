@@ -24,7 +24,6 @@ public class MenuManager : MonoBehaviour
     {
         if (scene.name == "GameScene" && playerInventory != null)
         {
-            //playerInventory = GameObject.FindObjectOfType<Inventory>();
             playerController = GameObject.FindObjectOfType<PlayerController>();
             playerHealth = GameObject.FindObjectOfType<PlayerHealth>();
             playerController.EnableMovement();

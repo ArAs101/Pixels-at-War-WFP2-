@@ -38,7 +38,6 @@ public class PlayerHealthBar : MonoBehaviour
             }
         }
 
-        // Initialisieren der Gesundheitsanzeige, falls die Referenzen gesetzt wurden
         if (playerHealth != null && slider != null)
         {
             slider.maxValue = playerHealth.maxHealth;

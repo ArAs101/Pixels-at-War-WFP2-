@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-//using Unity.VisualScripting;
 using UnityEngine;
 
 public class Gun : MonoBehaviour
@@ -25,9 +24,6 @@ public class Gun : MonoBehaviour
     public float reloadTime = 0.5f;
     public TextMeshProUGUI reloadText;
     private bool isDisplayingText = false;
-
-
-
 
     void Start()
     {
@@ -68,10 +64,6 @@ public class Gun : MonoBehaviour
         {
             reloadText = GameObject.Find("ReloadText").GetComponent<TextMeshProUGUI>();
             if (reloadText == null)
-            //{
-            //reloadText.gameObject.SetActive(false);
-            //}
-            //else
             {
                 Debug.LogWarning("textfeld nicht gefunden");
             }
@@ -103,7 +95,6 @@ public class Gun : MonoBehaviour
             Shoot();
 
             particles.Play();
-            //Debug.Log("schuss...");
         }
         else if (Input.GetMouseButtonUp(0))
         {
@@ -144,12 +135,7 @@ public class Gun : MonoBehaviour
 
     void Shoot()
     {
-        if (particles == null)
-        {
-            Debug.LogWarning("referenz auf partikel fehlt...");
-        }
         RaycastHit hit;
-
 
         float randomY = Random.Range(-gunControl, gunControl);
         float randomX = Random.Range(-gunControl, gunControl);
@@ -175,7 +161,6 @@ public class Gun : MonoBehaviour
                 Debug.LogWarning("impact referenz fehlt...");
             }
         }
-        //Debug.DrawRay(fpsCam.transform.position, randomDirection * range, Color.green, 10f);
         currentAmmoInMagazine--;
         UpdateAmmoFraction();
 
@@ -188,14 +173,11 @@ public class Gun : MonoBehaviour
         {
             int ammoUnits = playerInventory.ammoCurrentlyInInventory * 30;
             ammoFraction.text = currentAmmoInMagazine + "/" + ammoUnits;
-            //Debug.Log(currentAmmoInMagazine);
         }
         else
         {
             Debug.LogWarning("ammofraction-element nicht zugewiesen");
         }
-        //ammoFraction.text = "test";
-        //Debug.Log(ammoFraction.text);
     }
 
     private IEnumerator ReloadGun()

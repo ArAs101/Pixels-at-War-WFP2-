@@ -19,7 +19,6 @@ public class LevelManager : MonoBehaviour
     public GameObject levelDonePanel;
     public GameObject hudPanel;
     public GameObject gameFinishedPanel;
-    //public static Camera MainCamera;
     public Inventory playerInventory;
     public MenuManager menuManager;
     public GameObject deathScreen;
@@ -28,10 +27,10 @@ public class LevelManager : MonoBehaviour
     public TextMeshProUGUI levelIndicator;
     private int savedAmmoCount;
     private int savedBandagesCount;
-    //private int tempHealth;
     private int savedCoins;
     private int savedLoadedAmmo;
     private int savedFireRateLevel;
+    private int savedPrecisionLevel;
     private Gun gun;
     public NavMeshSurface navMeshSurface;
 
@@ -53,7 +52,6 @@ public class LevelManager : MonoBehaviour
         Debug.Log("level " + currentLevel + " wird initialisiert");
         Time.timeScale = 1;
         spawnController.DeleteCollectables();
-        //spawnController.DespawnPlayer();
         dungeonGenerator.GenerateGrid();
         dungeonGenerator.GenerateDrunkardsWalk();
         dungeonGenerator.DrawDungeon();
@@ -77,20 +75,21 @@ public class LevelManager : MonoBehaviour
         {
             Debug.Log(PlayerPrefs.GetInt("CheckpointAmmo") + " kugeln im inventar, bandagen: " + PlayerPrefs.GetInt("CheckpointBandages") + ", gesundheit: "
             + playerHealth.currentHealth + ", münzen: " + PlayerPrefs.GetInt("CheckpointCoins") + ", im magazin: " + PlayerPrefs.GetInt("CheckpointLoadedAmmo") +
-            ", feuergeschwindigkeitslevel: " + PlayerPrefs.GetInt("CheckpointFireRateLevel"));
+            ", feuergeschwindigkeitslevel: " + PlayerPrefs.GetInt("CheckpointFireRateLevel") + ", präzisionslevel: " + PlayerPrefs.GetInt("CheckpointPrecisionLevel"));
             LoadCheckpoint();
         }
         else
         {
             Debug.Log("keinen gespeicherten spielstand gefunden. starte neues spiel");
-            //SaveCheckpoint();
         }
         
         levelIndicator.text = "Level " + currentLevel;
         Debug.Log("Level " + currentLevel + " gestartet");
 
         Debug.Log("zu beginn des jeweiligen levels im levelmanager: " + playerInventory.ammoCurrentlyInInventory + " kugeln im inventar, bandagen: " + playerInventory.bandagesCurrentlyInInventory + ", gesundheit: "
-            + playerHealth.currentHealth + ", münzen: " + playerInventory.coinsCurrentlyInInventory + ", im magazin: " + playerInventory.ammoInLoadedMagazine + "im magazin: " + gun.currentAmmoInMagazine);
+            + playerHealth.currentHealth + ", münzen: " + playerInventory.coinsCurrentlyInInventory + ", im magazin: " + playerInventory.ammoInLoadedMagazine + "im magazin: " + gun.currentAmmoInMagazine +
+            ", feuergeschw.: " + playerInventory.fireRateLevelText.text + ", präzision: " + playerInventory.precisionLevelText.text);
+        playerController.HideCursor();
     }
 
     public void SaveCheckpoint()
@@ -104,9 +103,11 @@ public class LevelManager : MonoBehaviour
             PlayerPrefs.SetInt("CheckpointCoins", playerInventory.coinsCurrentlyInInventory);
             PlayerPrefs.SetInt("CheckpointLoadedAmmo", gun.currentAmmoInMagazine);
             PlayerPrefs.SetInt("CheckpointFireRateLevel", int.Parse(playerInventory.fireRateLevelText.text));
+            PlayerPrefs.SetInt("CheckpointPrecisionLevel", int.Parse(playerInventory.precisionLevelText.text));
             PlayerPrefs.Save();
-            Debug.Log("checkpoint gespeichert: level " + currentLevel + ", munition: " + playerInventory.ammoCurrentlyInInventory + "," + " bandagen: " + playerInventory.bandagesCurrentlyInInventory + ", gesundheit: "
-                + playerHealth.currentHealth + ", münzen: " + playerInventory.coinsCurrentlyInInventory + ", im magazin: " + playerInventory.ammoInLoadedMagazine + ", feuergeschwindigkeitslevel: " + playerInventory.fireRateLevelText.text);
+            Debug.Log("checkpoint gespeichert: level " + currentLevel + ", munition: " + playerInventory.ammoCurrentlyInInventory + ", bandagen: " + playerInventory.bandagesCurrentlyInInventory + ", gesundheit: " +
+                playerHealth.currentHealth + ", münzen: " + playerInventory.coinsCurrentlyInInventory + ", im magazin: " + playerInventory.ammoInLoadedMagazine + ", feuergeschwindigkeitslevel: " + 
+                playerInventory.fireRateLevelText.text + ", präzisionslevel: " + playerInventory.precisionLevelText.text);
         }
         else
         {
@@ -125,9 +126,10 @@ public class LevelManager : MonoBehaviour
             savedCoins = PlayerPrefs.GetInt("CheckpointCoins");
             savedLoadedAmmo = PlayerPrefs.GetInt("CheckpointLoadedAmmo");
             playerHealth.UpdateHealthBar(playerHealth.currentHealth);
-            savedFireRateLevel = PlayerPrefs.GetInt("CheckpointFireRateLevel", int.Parse(playerInventory.fireRateLevelText.text));
+            savedFireRateLevel = PlayerPrefs.GetInt("CheckpointFireRateLevel");
+            savedPrecisionLevel = PlayerPrefs.GetInt("CheckpointPrecisionLevel");
             Debug.Log("checkpoint geladen: level " + currentLevel + ", munition: " + savedAmmoCount + ", bandagen: " + savedBandagesCount + ", gesundheit: " + playerHealth.currentHealth + ", münzen: " + savedCoins
-                + ", im magazin: " + savedLoadedAmmo + ", feuergeschwindigkeitslevel: " + savedFireRateLevel);
+                + ", im magazin: " + savedLoadedAmmo + ", feuergeschwindigkeitslevel: " + savedFireRateLevel + ", präzisionslevel: " + savedPrecisionLevel);
         }
         else
         {
@@ -207,7 +209,6 @@ public class LevelManager : MonoBehaviour
             gameFinishedPanel.SetActive(true);
             Time.timeScale = 0;
             playerController.DisableMovementAndShowCursor();
-            //SaveCheckpoint();
         }
         else
         {

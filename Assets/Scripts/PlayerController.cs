@@ -21,10 +21,7 @@ public class PlayerController : MonoBehaviour
     private bool cameraInitialized = false;
 
     private Vector3 moveDirection;
-    //private Vector2 currentInput;
-
     private float rotationX = 0f;
-    //private static bool instanceExists = false;
 
     private void Start()
     {
@@ -132,10 +129,8 @@ public class PlayerController : MonoBehaviour
         Cursor.visible = true;
     }
 
-    /*IEnumerator LockAfterDelay()
+    public void HideCursor()
     {
-        yield return new WaitForSeconds(0.1f);
         Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-    }*/
+    }
 }
