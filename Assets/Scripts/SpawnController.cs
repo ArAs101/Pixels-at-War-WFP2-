@@ -72,7 +72,7 @@ public class SpawnController : MonoBehaviour
                 if (drunkardsWalkInstance.grid[x, y] == 0)
                 {
                     Vector3 position = GridToWorldPosition(x, y);
-                    Vector3 spawnRadius = new Vector3(1.5f, 0, 1.5f);
+                    Vector3 spawnRadius = new Vector3(2.5f, 0, 2.5f);
                     if (IsAreaClear(position, spawnRadius))
                     {
                         enemySpawnPositions.Add(position);
@@ -96,19 +96,19 @@ public class SpawnController : MonoBehaviour
             }
 
             int randomIndex = Random.Range(0, enemySpawnPositions.Count);
-            Vector3 spikeyEnemyPos = enemySpawnPositions[0];
+            Vector3 spikeyEnemyPos = enemySpawnPositions[randomIndex];
             spikeyEnemyPos.y = 1.3f;
             GameObject spikeyEnemy = Instantiate(spikeyEnemyPrefab, spikeyEnemyPos, Quaternion.identity);
             spawnedEnemies.Add(spikeyEnemy);
-            
+            enemySpawnPositions.RemoveAt(randomIndex);
             spikeyEnemy.GetComponent<SpikeyEnemy>().levelManager = levelManager;
 
-            Vector3 enemyPos = enemySpawnPositions[1];
+            randomIndex = Random.Range(0, enemySpawnPositions.Count);
+            Vector3 enemyPos = enemySpawnPositions[randomIndex];
             enemyPos.y = 1.3f;
             GameObject fireyEnemy = Instantiate(fireyEnemyPrefab, enemyPos, Quaternion.identity);
-            spawnedEnemies.Add(fireyEnemy);
-            enemySpawnPositions.RemoveAt(0);
-            enemySpawnPositions.RemoveAt(1);
+            spawnedEnemies.Add(fireyEnemy);            
+            enemySpawnPositions.RemoveAt(randomIndex);
             fireyEnemy.GetComponent<FireyEnemy>().levelManager = levelManager;
         }
     }
@@ -161,6 +161,7 @@ public class SpawnController : MonoBehaviour
         else
         {
             player.transform.position = enemySpawnPositions[randomIndex];
+            enemySpawnPositions.RemoveAt(randomIndex);
         }
     }
 

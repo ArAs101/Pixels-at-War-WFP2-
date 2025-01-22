@@ -59,6 +59,7 @@ public class LevelManager : MonoBehaviour
         spawnController.ClearPreviousSpawns();
         spawnController.CollectSpawnPositions(enemyCount, ammoCount);
         spawnController.SpawnPlayer();
+        playerController.HideCursor();
         spawnController.SpawnAmmo(ammoCount);
         spawnController.SpawnBandages(bandagesCount);
         spawnController.SpawnCoins(coinsCount);
@@ -88,8 +89,7 @@ public class LevelManager : MonoBehaviour
 
         Debug.Log("zu beginn des jeweiligen levels im levelmanager: " + playerInventory.ammoCurrentlyInInventory + " kugeln im inventar, bandagen: " + playerInventory.bandagesCurrentlyInInventory + ", gesundheit: "
             + playerHealth.currentHealth + ", münzen: " + playerInventory.coinsCurrentlyInInventory + ", im magazin: " + playerInventory.ammoInLoadedMagazine + "im magazin: " + gun.currentAmmoInMagazine +
-            ", feuergeschw.: " + playerInventory.fireRateLevelText.text + ", präzision: " + playerInventory.precisionLevelText.text);
-        playerController.HideCursor();
+            ", feuergeschw.: " + playerInventory.fireRateLevelText.text + ", präzision: " + playerInventory.precisionLevelText.text);        
     }
 
     public void SaveCheckpoint()
@@ -243,10 +243,13 @@ public class LevelManager : MonoBehaviour
         else
         {
             Debug.Log("kein checkpointlevel gefunden");
+            playerHealth.ResetHealth();
+            playerInventory.ResetInventory();
         }
 
         Debug.Log("in restartmethode: " + playerInventory.ammoCurrentlyInInventory + " kugeln im inventar, bandagen: " + playerInventory.bandagesCurrentlyInInventory + ", gesundheit: " 
             + playerHealth.currentHealth + ", münzen: " + playerInventory.coinsCurrentlyInInventory + ", im magazin: " + playerInventory.ammoInLoadedMagazine);
+
         StartCoroutine(InitializeLevel(currentLevel));
     }
 }

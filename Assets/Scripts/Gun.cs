@@ -110,7 +110,15 @@ public class Gun : MonoBehaviour
             }
             else
             {
-                if (currentAmmoInMagazine > 0)
+                if (currentAmmoInMagazine == 1)
+                {
+                    string message = currentAmmoInMagazine + " Kugel ist noch im Magazin!";
+                    if (!isDisplayingText)
+                    {
+                        StartCoroutine(DisplayHUDMessage(message));
+                    }
+                }
+                if (currentAmmoInMagazine > 1)
                 {
                     string message = currentAmmoInMagazine + " Kugeln sind noch im Magazin!";
                     if (!isDisplayingText)

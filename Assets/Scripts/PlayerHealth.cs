@@ -53,14 +53,14 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 
     public void SaveHealth()
     {
-        PlayerPrefs.SetInt("CheckpointLevel", currentHealth);
+        PlayerPrefs.SetInt("PlayerHealth", currentHealth);
         PlayerPrefs.Save();
         Debug.Log("gesundheit gespeichert: " + currentHealth);
     }
 
     public void LoadHealth()
     {
-        if (PlayerPrefs.HasKey("CheckpointLevel"))
+        if (PlayerPrefs.HasKey("PlayerHealth"))
         {
             currentHealth = PlayerPrefs.GetInt("PlayerHealth");
             Debug.Log("gesundheit geladen: " + currentHealth);
@@ -78,6 +78,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         currentHealth = maxHealth;
         PlayerPrefs.SetInt("PlayerHealth", maxHealth);
         Debug.Log("gesundheit auf 100 gesetzt");
+        UpdateHealthBar(currentHealth);
     }
 
     public void TakeDamage(int amount)
