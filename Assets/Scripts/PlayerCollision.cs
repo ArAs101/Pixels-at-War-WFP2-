@@ -31,7 +31,7 @@ public class PlayerCollision : MonoBehaviour
 
             if (playerHealth != null)
             {
-                int damageAmount = Random.Range(1, 5);
+                int damageAmount = 1;
                 Debug.Log("Spieler erleidet " + damageAmount + " Schaden.");
                 if (wait > 10)
                 {
@@ -78,7 +78,7 @@ public class PlayerCollision : MonoBehaviour
 
                 if (playerHealth != null)
                 {
-                    int damageAmount = Random.Range(5, 10);
+                    int damageAmount = 1;
                     Debug.Log("Spieler erleidet " + damageAmount + " Schaden.");
                     playerHealth.TakeDamage(damageAmount);
                     Destroy(other.gameObject);

@@ -33,6 +33,7 @@ public class LevelManager : MonoBehaviour
     private int savedPrecisionLevel;
     private Gun gun;
     public NavMeshSurface navMeshSurface;
+    public GameObject shouldBeDeadPanel;
 
     private void Start()
     {
@@ -155,10 +156,11 @@ public class LevelManager : MonoBehaviour
     {
         if (deathScreen != null)
         {
-            Debug.Log("du bist gestorben");
+            /*Debug.Log("du bist gestorben");
             deathScreen.SetActive(true);
             Time.timeScale = 0;
-            playerController.DisableMovementAndShowCursor();
+            playerController.DisableMovementAndShowCursor();*/
+            shouldBeDeadPanel.SetActive(true);
         }
         else
         {

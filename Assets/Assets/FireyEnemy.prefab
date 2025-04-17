@@ -138,7 +138,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b77ca04673c1a841833e9a7fd4236c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyHealth: {fileID: 0}
   slider: {fileID: 5047264165765056751}
+  fillImage: {fileID: 0}
 --- !u!1 &2979654345312565564
 GameObject:
   m_ObjectHideFlags: 0
@@ -528,7 +530,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelManager: {fileID: 0}
   health: 0
-  healthBar: {fileID: 0}
+  healthBar: {fileID: 3154269709997700713}
 --- !u!65 &7935372014748861464
 BoxCollider:
   m_ObjectHideFlags: 0
