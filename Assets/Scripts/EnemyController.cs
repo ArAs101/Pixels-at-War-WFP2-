@@ -29,7 +29,7 @@ public class EnemyController : MonoBehaviour
     void Update()
     {
         agent.SetDestination(player.position);
-        if (agent.name == "FireyEnemy(Clone)" && !isShooting)
+        if (agent.name.Contains("FireyEnemy") && !isShooting)
         {
             isShooting = true;
             InvokeRepeating(nameof(ShootAtPlayer), 0f, 3f);
