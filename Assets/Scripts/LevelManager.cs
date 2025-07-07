@@ -34,11 +34,11 @@ public class LevelManager : MonoBehaviour
     private Gun gun;
     public NavMeshSurface navMeshSurface;
     public GameObject shouldBeDeadPanel;
+    public DungeonBatchGenerator dungeonBatchGenerator;
 
     private void Start()
     {
-        enemyCount = Random.Range(5, 15);
-        enemyCount = enemyCount % 2 == 0 ? enemyCount : enemyCount + 1;
+        enemyCount = 10;
         ammoCount = 10;
         bandagesCount = 10;
         coinsCount = 25;
@@ -53,25 +53,29 @@ public class LevelManager : MonoBehaviour
         Debug.Log("level " + currentLevel + " wird initialisiert");
         Time.timeScale = 1;
         spawnController.DeleteCollectables();
-        dungeonGenerator.GenerateGrid();
-        dungeonGenerator.GenerateDrunkardsWalk();
-        dungeonGenerator.DrawDungeon();
+        //dungeonGenerator.GenerateGrid();
+        //dungeonGenerator.GenerateDrunkardsWalk();
+        //dungeonGenerator.DrawDungeon();
         spawnController.Initialize(dungeonGenerator);
-        spawnController.ClearPreviousSpawns();
-        spawnController.CollectSpawnPositions(enemyCount, ammoCount);
-        spawnController.SpawnPlayer();
+        //spawnController.ClearPreviousSpawns();
+        //spawnController.CollectSpawnPositions(enemyCount, ammoCount);
+        //dungeonBatchGenerator.GenerateMultipleDungeons();
+        //dungeonGenerator.VisualizeDungeonWithColorTiles();
+        //StartCoroutine(dungeonGenerator.CaptureTopDownScreenshot());
+        SetEnemyCount(10);
+        //spawnController.SpawnPlayer();
         playerController.HideCursor();
-        spawnController.SpawnAmmo(ammoCount);
-        spawnController.SpawnBandages(bandagesCount);
-        spawnController.SpawnCoins(coinsCount);
-        spawnController.SpawnEnemies(enemyCount);
+        //spawnController.SpawnAmmo(ammoCount);
+        //spawnController.SpawnBandages(bandagesCount);
+        //spawnController.SpawnCoins(coinsCount);
+        //spawnController.SpawnEnemies(enemyCount);
         navMeshSurface.BuildNavMesh();
-        
+        yield return new WaitForEndOfFrame();
         playerInventory = GameObject.FindObjectOfType<Inventory>();
         playerHealth = GameObject.FindObjectOfType<PlayerHealth>();
         playerHealthBar = GameObject.FindObjectOfType<PlayerHealthBar>();
         gun = GameObject.FindObjectOfType<Gun>();
-        yield return new WaitForEndOfFrame();
+        //yield return new WaitForEndOfFrame();
 
         if (PlayerPrefs.HasKey("CheckpointLevel"))
         {
@@ -144,7 +148,7 @@ public class LevelManager : MonoBehaviour
         {
             currentLevel++;
             SaveCheckpoint();
-            menuManager.BackToMainMenu();
+            Application.Quit();
         }
         else
         {
@@ -156,10 +160,6 @@ public class LevelManager : MonoBehaviour
     {
         if (deathScreen != null)
         {
-            /*Debug.Log("du bist gestorben");
-            deathScreen.SetActive(true);
-            Time.timeScale = 0;
-            playerController.DisableMovementAndShowCursor();*/
             shouldBeDeadPanel.SetActive(true);
         }
         else
@@ -170,7 +170,7 @@ public class LevelManager : MonoBehaviour
 
     public void SetEnemyCount(int count)
     {
-        remainingEnemies = count;
+        remainingEnemies = 10;
     }
 
     public void EnemyDied()

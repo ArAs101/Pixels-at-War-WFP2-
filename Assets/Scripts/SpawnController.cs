@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+//using static UnityEditor.PlayerSettings;
 
 public class SpawnController : MonoBehaviour
 {
@@ -20,7 +21,12 @@ public class SpawnController : MonoBehaviour
     private List<GameObject> ammoBoxes = new List<GameObject>();
     private List<GameObject> bandages = new List<GameObject>();
     private List<GameObject> coins = new List<GameObject>();
-
+    [Header("Visualisierung gespawnter Prefabs")]
+    public GameObject spikeyEnemyTilePrefab;
+    public GameObject fireyEnemyTilePrefab;
+    public GameObject ammoTilePrefab;
+    public GameObject bandageTilePrefab;
+    public GameObject coinTilePrefab;
 
     public void Initialize(DrunkardsWalk dwInstance)
     {
@@ -30,6 +36,42 @@ public class SpawnController : MonoBehaviour
             Debug.LogError("dw-instanz nicht zugewiesen");
             return;
         }
+    }
+
+    public void Start()
+    {
+        GameObject scObj = GameObject.Find("SpawnController"); // Name in Szene
+        if (scObj != null)
+        {
+            SpawnController sc = scObj.GetComponent<SpawnController>();
+            if (sc != null)
+            {
+                sc.RegisterEnemy(gameObject);
+            }
+        }
+        AddManualEnemiesToList();
+    }
+
+    public void RegisterEnemy(GameObject enemy)
+    {
+        if (!spawnedEnemies.Contains(enemy))
+        {
+            spawnedEnemies.Add(enemy);
+        }
+    }
+
+    private void AddManualEnemiesToList()
+    {
+        GameObject[] allEnemies = GameObject.FindGameObjectsWithTag("Enemy");
+        foreach (GameObject enemy in allEnemies)
+        {
+            if (!spawnedEnemies.Contains(enemy))
+            {
+                spawnedEnemies.Add(enemy);
+            }
+        }
+
+        Debug.Log("Manuelle Gegner registriert: " + allEnemies.Length);
     }
 
     public void ClearPreviousSpawns()
@@ -85,7 +127,7 @@ public class SpawnController : MonoBehaviour
 
     public void SpawnEnemies(int enemyCount)
     {
-        levelManager.SetEnemyCount(enemyCount);
+        //levelManager.SetEnemyCount(enemyCount);
 
         for (int i = 0; i < enemyCount && enemySpawnPositions.Count > 0; i += 2)
         {
@@ -97,19 +139,29 @@ public class SpawnController : MonoBehaviour
 
             int randomIndex = Random.Range(0, enemySpawnPositions.Count);
             Vector3 spikeyEnemyPos = enemySpawnPositions[randomIndex];
-            spikeyEnemyPos.y = 1.3f;
-            GameObject spikeyEnemy = Instantiate(spikeyEnemyPrefab, spikeyEnemyPos, Quaternion.identity);
-            spawnedEnemies.Add(spikeyEnemy);
+            spikeyEnemyPos.y = 0.01f;
+            //GameObject enemyTilePrefab = drunkardsWalkInstance.tilePrefab;
+            GameObject spikeyTile = Instantiate(spikeyEnemyTilePrefab, spikeyEnemyPos, Quaternion.identity);
+            spikeyTile.tag = "Tile";
+            //Renderer enemyRenderer = spikeyTile.GetComponent<Renderer>();
+            //enemyRenderer.material.color=Color.yellow;
+            //GameObject spikeyEnemy = Instantiate(spikeyEnemyPrefab, spikeyEnemyPos, Quaternion.identity);
+            //spawnedEnemies.Add(spikeyEnemy);
             enemySpawnPositions.RemoveAt(randomIndex);
-            spikeyEnemy.GetComponent<SpikeyEnemy>().levelManager = levelManager;
+            //spikeyEnemy.GetComponent<SpikeyEnemy>().levelManager = levelManager;
 
             randomIndex = Random.Range(0, enemySpawnPositions.Count);
-            Vector3 enemyPos = enemySpawnPositions[randomIndex];
-            enemyPos.y = 1.3f;
-            GameObject fireyEnemy = Instantiate(fireyEnemyPrefab, enemyPos, Quaternion.identity);
-            spawnedEnemies.Add(fireyEnemy);            
+            Vector3 fireyEnemyPos = enemySpawnPositions[randomIndex];
+            fireyEnemyPos.y = 0.01f;
+            
+            GameObject fireyTile = Instantiate(fireyEnemyTilePrefab, fireyEnemyPos, Quaternion.identity);
+            fireyTile.tag = "Tile";
+            //Renderer fireyEnemyRenderer = fireyEnemyTilePrefab.GetComponent<Renderer>();
+            //enemyRenderer.material.color=Color.white;
+            //GameObject fireyEnemy = Instantiate(fireyEnemyPrefab, enemyPos, Quaternion.identity);
+            //spawnedEnemies.Add(fireyEnemy);            
             enemySpawnPositions.RemoveAt(randomIndex);
-            fireyEnemy.GetComponent<FireyEnemy>().levelManager = levelManager;
+            //fireyEnemy.GetComponent<FireyEnemy>().levelManager = levelManager;
         }
     }
 
@@ -193,8 +245,10 @@ public class SpawnController : MonoBehaviour
             }
             int randomIndex = Random.Range(0, itemSpawnPositions.Count);
             Vector3 ammoPos = itemSpawnPositions[randomIndex];
-            GameObject ammo = Instantiate(ammoPrefab, ammoPos, Quaternion.identity);
-            ammoBoxes.Add(ammo);
+            ammoPos.y = 0.01f;
+            GameObject ammoTile = Instantiate(ammoTilePrefab, ammoPos, Quaternion.identity);
+            ammoTile.tag = "Tile";
+            //ammoBoxes.Add(ammo);
             itemSpawnPositions.RemoveAt(randomIndex);
         }
     }
@@ -210,9 +264,10 @@ public class SpawnController : MonoBehaviour
             }
             int randomIndex = Random.Range(0, itemSpawnPositions.Count);
             Vector3 bandagePos = itemSpawnPositions[randomIndex];
-            bandagePos.y = 0f;
-            GameObject bandage = Instantiate(bandagePrefab, bandagePos, Quaternion.identity);
-            bandages.Add(bandage);
+            bandagePos.y = 0.1f;
+            GameObject bandageTile = Instantiate(bandageTilePrefab, bandagePos, Quaternion.identity);
+            bandageTile.tag = "Tile";
+            //bandages.Add(bandage);
             itemSpawnPositions.RemoveAt(randomIndex);
         }
     }
@@ -228,9 +283,10 @@ public class SpawnController : MonoBehaviour
             }
             int randomIndex = Random.Range(0, itemSpawnPositions.Count);
             Vector3 coinPos = itemSpawnPositions[randomIndex];
-            coinPos.y = 0.3f;
-            GameObject coin = Instantiate(coinPrefab, coinPos, Quaternion.identity);
-            coins.Add(coin);
+            coinPos.y = 0.1f;
+            GameObject coinTile = Instantiate(coinTilePrefab, coinPos, Quaternion.identity);
+            coinTile.tag = "Tile";
+            //coins.Add(coin);
             itemSpawnPositions.RemoveAt(randomIndex);
         }
     }
