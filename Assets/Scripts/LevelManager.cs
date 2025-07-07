@@ -37,8 +37,7 @@ public class LevelManager : MonoBehaviour
 
     private void Start()
     {
-        enemyCount = Random.Range(5, 15);
-        enemyCount = enemyCount % 2 == 0 ? enemyCount : enemyCount + 1;
+        enemyCount = 10;
         ammoCount = 10;
         bandagesCount = 10;
         coinsCount = 25;
