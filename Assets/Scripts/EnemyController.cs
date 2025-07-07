@@ -22,8 +22,18 @@ public class EnemyController : MonoBehaviour
         }
         else
         {
-            Debug.LogError("Spieler mit Tag 'Player' nicht gefunden!");
+            GameObject manuallSetPlayer = GameObject.FindWithTag("Player");
+            if (manuallSetPlayer != null)
+            {
+                player = manuallSetPlayer.transform;
+                Debug.Log("manuell platzierten spieler gefunden");
+            }
+            else
+            {
+                Debug.LogError("Spieler mit Tag 'Player' nicht gefunden!");
+            }
         }
+        
     }
 
     void Update()

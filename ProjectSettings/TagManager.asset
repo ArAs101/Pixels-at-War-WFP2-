@@ -11,6 +11,7 @@ TagManager:
   - Ammo
   - Bandages
   - Coins
+  - Tile
   layers:
   - Default
   - TransparentFX

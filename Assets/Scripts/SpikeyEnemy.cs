@@ -20,6 +20,11 @@ public class SpikeyEnemy : MonoBehaviour, IDamageable
         health = 100;
         healthBar = GetComponentInChildren<EnemyHealthBar>();
         healthBar.UpdateHealthBar(health, 100);
+        if (levelManager == null)
+        {
+            levelManager = FindObjectOfType<LevelManager>();
+        }
+
     }
 
     public void TakeDamage(int amount)
