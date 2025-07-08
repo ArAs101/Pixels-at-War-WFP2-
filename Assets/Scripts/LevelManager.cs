@@ -197,6 +197,8 @@ public class LevelManager : MonoBehaviour
             levelDonePanel.SetActive(true);
             Time.timeScale = 0;
             playerController.DisableMovementAndShowCursor();
+            PlayerPrefs.SetInt("ExperimentAbgeschlossen", 1);
+            PlayerPrefs.Save();
         }
         else
         {

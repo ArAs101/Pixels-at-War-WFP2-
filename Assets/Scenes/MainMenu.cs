@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
+using UnityEngine.UI;
 
 public class MenuManager : MonoBehaviour
 {
@@ -9,10 +10,15 @@ public class MenuManager : MonoBehaviour
     public LevelManager levelManager;
     private bool isNewGame = false;
     public PlayerHealth playerHealth;
+    public Button startButton;
 
     private void Start()
     {
         playerHealth = GameObject.FindObjectOfType<PlayerHealth>();
+        if (PlayerPrefs.GetInt("ExperimentAbgeschlossen", 0) == 1)
+        {
+            startButton.interactable = false;
+        }
     }
 
     private void OnDestroy()
