@@ -1297,6 +1297,7 @@ MonoBehaviour:
   playerController: {fileID: 0}
   levelManager: {fileID: 0}
   playerHealth: {fileID: 0}
+  startButton: {fileID: 1718617940}
 --- !u!4 &1800917415
 Transform:
   m_ObjectHideFlags: 0
