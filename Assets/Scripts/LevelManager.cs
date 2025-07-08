@@ -47,6 +47,14 @@ public class LevelManager : MonoBehaviour
 
     IEnumerator InitializeLevel(int level)
     {
+#if UNITY_WEBGL
+if (PlayerPrefs.HasKey("ExperimentAbgeschlossen") && PlayerPrefs.GetInt("ExperimentAbgeschlossen") == 1)
+{
+    Debug.Log("Spiel wurde bereits abgeschlossen. Beende Spiel.");
+    SceneManager.LoadScene("MainMenuWelcome");
+    yield break;
+}
+#endif
         currentLevel = level;
 
         Debug.Log("level " + currentLevel + " wird initialisiert");
@@ -65,7 +73,7 @@ public class LevelManager : MonoBehaviour
         spawnController.SpawnCoins(coinsCount);
         spawnController.SpawnEnemies(enemyCount);
         navMeshSurface.BuildNavMesh();
-        
+
         playerInventory = GameObject.FindObjectOfType<Inventory>();
         playerHealth = GameObject.FindObjectOfType<PlayerHealth>();
         playerHealthBar = GameObject.FindObjectOfType<PlayerHealthBar>();
@@ -83,13 +91,13 @@ public class LevelManager : MonoBehaviour
         {
             Debug.Log("keinen gespeicherten spielstand gefunden. starte neues spiel");
         }
-        
+
         levelIndicator.text = "Level " + currentLevel;
         Debug.Log("Level " + currentLevel + " gestartet");
 
         Debug.Log("zu beginn des jeweiligen levels im levelmanager: " + playerInventory.ammoCurrentlyInInventory + " kugeln im inventar, bandagen: " + playerInventory.bandagesCurrentlyInInventory + ", gesundheit: "
             + playerHealth.currentHealth + ", münzen: " + playerInventory.coinsCurrentlyInInventory + ", im magazin: " + playerInventory.ammoInLoadedMagazine + "im magazin: " + gun.currentAmmoInMagazine +
-            ", feuergeschw.: " + playerInventory.fireRateLevelText.text + ", präzision: " + playerInventory.precisionLevelText.text);        
+            ", feuergeschw.: " + playerInventory.fireRateLevelText.text + ", präzision: " + playerInventory.precisionLevelText.text);
     }
 
     public void SaveCheckpoint()
@@ -106,7 +114,7 @@ public class LevelManager : MonoBehaviour
             PlayerPrefs.SetInt("CheckpointPrecisionLevel", int.Parse(playerInventory.precisionLevelText.text));
             PlayerPrefs.Save();
             Debug.Log("checkpoint gespeichert: level " + currentLevel + ", munition: " + playerInventory.ammoCurrentlyInInventory + ", bandagen: " + playerInventory.bandagesCurrentlyInInventory + ", gesundheit: " +
-                playerHealth.currentHealth + ", münzen: " + playerInventory.coinsCurrentlyInInventory + ", im magazin: " + playerInventory.ammoInLoadedMagazine + ", feuergeschwindigkeitslevel: " + 
+                playerHealth.currentHealth + ", münzen: " + playerInventory.coinsCurrentlyInInventory + ", im magazin: " + playerInventory.ammoInLoadedMagazine + ", feuergeschwindigkeitslevel: " +
                 playerInventory.fireRateLevelText.text + ", präzisionslevel: " + playerInventory.precisionLevelText.text);
         }
         else
@@ -143,6 +151,9 @@ public class LevelManager : MonoBehaviour
         {
             currentLevel++;
             SaveCheckpoint();
+#if !UNITY_WEBGL
+            PlayerPrefs.DeleteAll();
+#endif
             menuManager.BackToMainMenu();
         }
         else
@@ -250,7 +261,7 @@ public class LevelManager : MonoBehaviour
             playerInventory.ResetInventory();
         }
 
-        Debug.Log("in restartmethode: " + playerInventory.ammoCurrentlyInInventory + " kugeln im inventar, bandagen: " + playerInventory.bandagesCurrentlyInInventory + ", gesundheit: " 
+        Debug.Log("in restartmethode: " + playerInventory.ammoCurrentlyInInventory + " kugeln im inventar, bandagen: " + playerInventory.bandagesCurrentlyInInventory + ", gesundheit: "
             + playerHealth.currentHealth + ", münzen: " + playerInventory.coinsCurrentlyInInventory + ", im magazin: " + playerInventory.ammoInLoadedMagazine);
 
         StartCoroutine(InitializeLevel(currentLevel));
