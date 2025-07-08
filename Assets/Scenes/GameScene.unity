@@ -1849,6 +1849,7 @@ MonoBehaviour:
   playerController: {fileID: 389224243}
   levelManager: {fileID: 806617157}
   playerHealth: {fileID: 1285396690140148878, guid: 70b4e818a47dc9c46b88713603218abe, type: 3}
+  startButton: {fileID: 0}
 --- !u!4 &701222382
 Transform:
   m_ObjectHideFlags: 0
@@ -4936,7 +4937,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1641752271
 RectTransform:
   m_ObjectHideFlags: 0
