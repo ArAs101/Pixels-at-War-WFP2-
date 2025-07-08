@@ -49,6 +49,14 @@ public class LevelManager : MonoBehaviour
     IEnumerator InitializeLevel(int level)
     {
         currentLevel = level;
+#if UNITY_WEBGL
+if (PlayerPrefs.HasKey("ExperimentAbgeschlossen") && PlayerPrefs.GetInt("ExperimentAbgeschlossen") == 1)
+{
+    Debug.Log("Spiel wurde bereits abgeschlossen. Beende Spiel.");
+    SceneManager.LoadScene("MainMenuWelcome");
+    yield break;
+}
+#endif
 
         Debug.Log("level " + currentLevel + " wird initialisiert");
         Time.timeScale = 1;
@@ -148,6 +156,9 @@ public class LevelManager : MonoBehaviour
         {
             currentLevel++;
             SaveCheckpoint();
+#if !UNITY_WEBGL
+            PlayerPrefs.DeleteAll();
+#endif
             Application.Quit();
         }
         else
