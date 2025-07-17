@@ -12,6 +12,7 @@ public class EnemyController : MonoBehaviour
     public Transform fireBallSpawnpoint;
     public GameObject fireBallPrefab;
     private bool isShooting = false;
+    public float detectionRadius = 15f;
 
     void Start()
     {
@@ -26,11 +27,11 @@ public class EnemyController : MonoBehaviour
             if (manuallSetPlayer != null)
             {
                 player = manuallSetPlayer.transform;
-                Debug.Log("manuell platzierten spieler gefunden");
+                //Debug.Log("manuell platzierten spieler gefunden");
             }
             else
             {
-                Debug.LogError("Spieler mit Tag 'Player' nicht gefunden!");
+                //Debug.LogError("Spieler mit Tag 'Player' nicht gefunden!");
             }
         }
         
@@ -38,21 +39,32 @@ public class EnemyController : MonoBehaviour
 
     void Update()
     {
-        agent.SetDestination(player.position);
-        if (agent.name.Contains("FireyEnemy") && !isShooting)
+        if (player == null || agent == null) return;
+
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+
+        if (distanceToPlayer <= detectionRadius)
         {
-            isShooting = true;
-            InvokeRepeating(nameof(ShootAtPlayer), 0f, 3f);
+            agent.SetDestination(player.position);
+
+            if (agent.name.Contains("FireyEnemy") && !isShooting)
+            {
+                isShooting = true;
+                InvokeRepeating(nameof(ShootAtPlayer), 0f, 5f);
+            }
         }
-        else if (agent == null)
+        else
         {
-            Debug.LogError("agent nicht gefunden...");
-        }
-        else if (player == null)
-        {
-            Debug.LogError("player nicht gefunden...");
+            agent.ResetPath();
+
+            if (isShooting)
+            {
+                isShooting = false;
+                CancelInvoke(nameof(ShootAtPlayer));
+            }
         }
     }
+
 
     private void ShootAtPlayer()
     {
@@ -67,7 +79,7 @@ public class EnemyController : MonoBehaviour
             }
             else
             {
-                Debug.LogError("Feuerball oder SpawnPoint fehlt!");
+                //Debug.LogError("Feuerball oder SpawnPoint fehlt!");
             }
     }
 

@@ -17,7 +17,7 @@ public class PlayerCollision : MonoBehaviour
             playerInventory = GameObject.FindObjectOfType<Inventory>();
             if (playerInventory == null)
             {
-                Debug.LogError("inventory in playercollision nicht gefunden");
+                //Debug.LogError("inventory in playercollision nicht gefunden");
             }
         }
     }
@@ -26,13 +26,13 @@ public class PlayerCollision : MonoBehaviour
     {
         if (other.CompareTag("Enemy"))
         {
-            Debug.Log("Spieler hat einen Gegner berührt!");
+            //Debug.Log("Spieler hat einen Gegner berührt!");
             PlayerHealth playerHealth = GetComponent<PlayerHealth>();
 
             if (playerHealth != null)
             {
                 int damageAmount = 1;
-                Debug.Log("Spieler erleidet " + damageAmount + " Schaden.");
+                //Debug.Log("Spieler erleidet " + damageAmount + " Schaden.");
                 if (wait > 10)
                 {
                     wait = 0;
@@ -45,47 +45,47 @@ public class PlayerCollision : MonoBehaviour
             }
             else
             {
-                Debug.LogWarning("PlayerHealth-Komponente nicht gefunden!");
+                //Debug.LogWarning("PlayerHealth-Komponente nicht gefunden!");
             }
         }
         if (!gameObject.CompareTag("Enemy"))
         {
             if (other.CompareTag("Ammo"))
             {
-                Debug.Log("munition berührt");
+                //Debug.Log("munition berührt");
                 playerInventory.AddAmmo(1);
                 Destroy(other.gameObject);
             }
 
             if (other.CompareTag("Bandages"))
             {
-                Debug.Log("bandage berührt");
+                //Debug.Log("bandage berührt");
                 playerInventory.AddBandages(1);
                 Destroy(other.gameObject);
             }
 
             if (other.CompareTag("Coins"))
             {
-                Debug.Log("coin berührt");
+                //Debug.Log("coin berührt");
                 playerInventory.AddCoin(1);
                 Destroy(other.gameObject);
             }
 
             if (other.CompareTag("Fire"))
             {
-                Debug.Log("Spieler hat einen Feuerball berührt!");
+                //Debug.Log("Spieler hat einen Feuerball berührt!");
                 PlayerHealth playerHealth = GetComponent<PlayerHealth>();
 
                 if (playerHealth != null)
                 {
                     int damageAmount = 1;
-                    Debug.Log("Spieler erleidet " + damageAmount + " Schaden.");
+                    //Debug.Log("Spieler erleidet " + damageAmount + " Schaden.");
                     playerHealth.TakeDamage(damageAmount);
                     Destroy(other.gameObject);
                 }
                 else
                 {
-                    Debug.LogWarning("PlayerHealth-Komponente nicht gefunden!");
+                    //Debug.LogWarning("PlayerHealth-Komponente nicht gefunden!");
                 }
             }
         }

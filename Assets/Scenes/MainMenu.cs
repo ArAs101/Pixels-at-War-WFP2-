@@ -15,10 +15,10 @@ public class MenuManager : MonoBehaviour
     private void Start()
     {
         playerHealth = GameObject.FindObjectOfType<PlayerHealth>();
-        if (PlayerPrefs.GetInt("ExperimentAbgeschlossen", 0) == 1)
-        {
-            startButton.interactable = false;
-        }
+        //if (PlayerPrefs.GetInt("ExperimentAbgeschlossen", 0) == 1)
+        //{
+        //    startButton.interactable = false;
+        //}
     }
 
     private void OnDestroy()
@@ -33,7 +33,7 @@ public class MenuManager : MonoBehaviour
             playerController = GameObject.FindObjectOfType<PlayerController>();
             playerHealth = GameObject.FindObjectOfType<PlayerHealth>();
             playerController.EnableMovement();
-            Debug.Log("Inventar zurückgesetzt und bewegung aktiviert nach Szenenwechsel.");
+            //Debug.Log("Inventar zurückgesetzt und bewegung aktiviert nach Szenenwechsel.");
 
             if (isNewGame)
             {
@@ -51,7 +51,7 @@ public class MenuManager : MonoBehaviour
                 levelManager = GameObject.FindObjectOfType<LevelManager>();
                 if (levelManager == null)
                 {
-                    Debug.LogError("levelmanager in onsceneloaded nicht zugewiesen");
+                    //Debug.LogError("levelmanager in onsceneloaded nicht zugewiesen");
                 }
             }
         }
@@ -61,7 +61,7 @@ public class MenuManager : MonoBehaviour
     {
         isNewGame = true;
         PlayerPrefs.DeleteAll();
-        SceneManager.LoadScene("LevelC");
+        SceneManager.LoadScene("GameScene");
     }
 
     public void LoadGame()

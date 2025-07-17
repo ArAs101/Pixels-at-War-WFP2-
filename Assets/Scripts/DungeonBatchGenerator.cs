@@ -16,7 +16,7 @@ public class DungeonBatchGenerator : MonoBehaviour
     {
         for (int i = 0; i < dungeonCount; i++)
         {
-            Debug.Log("Generiere Dungeon " + (i + 1));
+            //Debug.Log("Generiere Dungeon " + (i + 1));
 
             // Falls alte Tiles noch da sind --> löschen
             foreach (GameObject tile in GameObject.FindGameObjectsWithTag("Tile"))
@@ -44,7 +44,7 @@ public class DungeonBatchGenerator : MonoBehaviour
                 System.IO.Directory.CreateDirectory(folderPath);
 
             ScreenCapture.CaptureScreenshot(filename);
-            Debug.Log("Screenshot gespeichert unter: " + filename);
+            //Debug.Log("Screenshot gespeichert unter: " + filename);
 
             folderPath = Application.dataPath + "/../DungeonExports";
             if (!System.IO.Directory.Exists(folderPath))
@@ -79,11 +79,11 @@ public class DungeonBatchGenerator : MonoBehaviour
             }
 
 
-            Debug.Log("Dungeonlayout exportiert unter: " + path);
+            //Debug.Log("Dungeonlayout exportiert unter: " + path);
 
             yield return new WaitForSeconds(0.5f);
         }
 
-        Debug.Log("Alle Dungeons generiert.");
+        //Debug.Log("Alle Dungeons generiert.");
     }
 }

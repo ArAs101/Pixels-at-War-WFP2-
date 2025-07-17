@@ -55,14 +55,14 @@ public class LoadGameMenuManager : MonoBehaviour
             LevelManager levelManager = FindObjectOfType<LevelManager>();
             if (levelManager != null)
             {
-                Debug.Log("Spielstand geladen: Level " + levelToLoad + ", Gesundheit " + health + ", Munition " + ammo + ", Bandagen " + bandages + ", Münzen " + coins + ", im magazin " + loadedAmmo +
-                    ", Feuergeschwindigkeit: Level " + savedFireRateLevel + ", Präzisionslevel: Level " + savedPrecisionLevel);
+                //Debug.Log("Spielstand geladen: Level " + levelToLoad + ", Gesundheit " + health + ", Munition " + ammo + ", Bandagen " + bandages + ", Münzen " + coins + ", im magazin " + loadedAmmo +
+                    //", Feuergeschwindigkeit: Level " + savedFireRateLevel + ", Präzisionslevel: Level " + savedPrecisionLevel);
                 SceneManager.LoadScene("GameScene");                
             }
         }
         else
         {
-            Debug.LogError("Kein gespeicherter Spielstand vorhanden.");
+            //Debug.LogError("Kein gespeicherter Spielstand vorhanden.");
         }
     }
 

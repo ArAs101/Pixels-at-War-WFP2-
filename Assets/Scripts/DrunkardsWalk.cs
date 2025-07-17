@@ -127,7 +127,7 @@ public class DrunkardsWalk : MonoBehaviour
                 if (x == startPos.x && y == startPos.y)
                 {
                     renderer.material.color = Color.gray;
-                    Debug.Log($"Startposition: ({startPos.x}, {startPos.y}) bei Gridgröße {width}×{length}");
+                    //Debug.Log($"Startposition: ({startPos.x}, {startPos.y}) bei Gridgröße {width}×{length}");
                 }
             }
         }
@@ -144,7 +144,7 @@ public class DrunkardsWalk : MonoBehaviour
             System.IO.Directory.CreateDirectory(folderPath);
 
         ScreenCapture.CaptureScreenshot(filename);
-        Debug.Log("Screenshot gespeichert unter: " + filename);
+        //Debug.Log("Screenshot gespeichert unter: " + filename);
     }
 
 }
