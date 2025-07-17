@@ -12,6 +12,7 @@ public class EnemyController : MonoBehaviour
     public Transform fireBallSpawnpoint;
     public GameObject fireBallPrefab;
     private bool isShooting = false;
+    float detectionRadius = 15f;
 
     void Start()
     {
@@ -26,49 +27,74 @@ public class EnemyController : MonoBehaviour
             if (manuallSetPlayer != null)
             {
                 player = manuallSetPlayer.transform;
-                Debug.Log("manuell platzierten spieler gefunden");
+                //Debug.Log("manuell platzierten spieler gefunden");
             }
             else
             {
-                Debug.LogError("Spieler mit Tag 'Player' nicht gefunden!");
+                //Debug.LogError("Spieler mit Tag 'Player' nicht gefunden!");
             }
         }
-        
+
     }
 
     void Update()
     {
-        agent.SetDestination(player.position);
-        if (agent.name.Contains("FireyEnemy") && !isShooting)
+        //OnDrawGizmosSelected();
+        if (player == null || agent == null) return;
+
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+
+        if (distanceToPlayer <= detectionRadius)
         {
-            isShooting = true;
-            InvokeRepeating(nameof(ShootAtPlayer), 0f, 3f);
+            agent.SetDestination(player.position);
+
+            if (agent.name.Contains("FireyEnemy") && !isShooting)
+            {
+                isShooting = true;
+                InvokeRepeating(nameof(ShootAtPlayer), 0f, 5f);
+            }
         }
-        else if (agent == null)
+        else
         {
-            Debug.LogError("agent nicht gefunden...");
+            agent.ResetPath();
+            if (isShooting)
+            {
+                isShooting = false;
+                CancelInvoke(nameof(ShootAtPlayer));
+            }
         }
-        else if (player == null)
-        {
-            Debug.LogError("player nicht gefunden...");
-        }
+
     }
+
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, detectionRadius);
+    }
+
 
     private void ShootAtPlayer()
     {
-            if (fireBallPrefab != null && fireBallSpawnpoint != null)
+        if (fireBallPrefab != null && fireBallSpawnpoint != null)
+        {
+            //GameObject fireBall = Instantiate(fireBallPrefab, fireBallSpawnpoint.position, Quaternion.identity);
+
+            GameObject fireBall = BulletPoolManager.Instance.GetBullet();
+            if (fireBall != null)
             {
-                GameObject fireBall = Instantiate(fireBallPrefab, fireBallSpawnpoint.position, Quaternion.identity);
+                fireBall.transform.position = fireBallSpawnpoint.position;
+                fireBall.transform.rotation = Quaternion.identity;
                 BulletController bulletController = fireBall.GetComponent<BulletController>();
                 if (bulletController != null)
                 {
                     bulletController.SetDirection(transform);
                 }
             }
-            else
-            {
-                Debug.LogError("Feuerball oder SpawnPoint fehlt!");
-            }
+        }
+        else
+        {
+            //Debug.LogError("Feuerball oder SpawnPoint fehlt!");
+        }
     }
 
     private void OnDisable()

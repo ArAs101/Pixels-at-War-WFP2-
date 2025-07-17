@@ -39,11 +39,11 @@ public class PlayerController : MonoBehaviour
             if (playerCamera != null)
             {
                 cameraInitialized = true;
-                Debug.Log("Main camera ist in playercontroller-klasse verfügbar und initialisiert");
+                //Debug.Log("Main camera ist in playercontroller-klasse verfügbar und initialisiert");
             }
             else
             {
-                Debug.LogWarning("Main camera ist in playercontroller-klasse noch nicht verfügbar");
+                //Debug.LogWarning("Main camera ist in playercontroller-klasse noch nicht verfügbar");
                 return;
             }
         }
@@ -66,11 +66,11 @@ public class PlayerController : MonoBehaviour
         playerCamera = GetComponentInChildren<Camera>();
         if (playerCamera == null)
         {
-            Debug.LogWarning("main camera konnte in playercontroller nicht gefunden werden");
+            //Debug.LogWarning("main camera konnte in playercontroller nicht gefunden werden");
         }
         else
         {
-            Debug.Log("Main camera ist in playercontroller-klasse verfügbar und initialisiert");
+            //Debug.Log("Main camera ist in playercontroller-klasse verfügbar und initialisiert");
         }
     }
 
@@ -117,13 +117,13 @@ public class PlayerController : MonoBehaviour
     }
     public void DisableMovement()
     {
-        Debug.Log("Bewegung deaktiviert");
+        //Debug.Log("Bewegung deaktiviert");
         CanMove = false;
     }
 
     public void DisableMovementAndShowCursor()
     {
-        Debug.Log("Bewegung deaktiviert");
+        //Debug.Log("Bewegung deaktiviert");
         CanMove = false;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;

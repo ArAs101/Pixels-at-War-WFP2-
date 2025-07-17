@@ -33,7 +33,7 @@ public class MenuManager : MonoBehaviour
             playerController = GameObject.FindObjectOfType<PlayerController>();
             playerHealth = GameObject.FindObjectOfType<PlayerHealth>();
             playerController.EnableMovement();
-            Debug.Log("Inventar zurückgesetzt und bewegung aktiviert nach Szenenwechsel.");
+            //Debug.Log("Inventar zurückgesetzt und bewegung aktiviert nach Szenenwechsel.");
 
             if (isNewGame)
             {
@@ -51,7 +51,7 @@ public class MenuManager : MonoBehaviour
                 levelManager = GameObject.FindObjectOfType<LevelManager>();
                 if (levelManager == null)
                 {
-                    Debug.LogError("levelmanager in onsceneloaded nicht zugewiesen");
+                    //Debug.LogError("levelmanager in onsceneloaded nicht zugewiesen");
                 }
             }
         }

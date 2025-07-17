@@ -20,7 +20,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
             playerHealthBar = GameObject.FindObjectOfType<PlayerHealthBar>();
             if (playerHealthBar == null)
             {
-                Debug.LogError("playerhealthbar nicht gefunden in playerhealth");
+                //Debug.LogError("playerhealthbar nicht gefunden in playerhealth");
             }
             else
             {
@@ -33,7 +33,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
             levelManager = GameObject.FindObjectOfType<LevelManager>();
             if (levelManager == null)
             {
-                Debug.LogError("levelmanager in playerhealth nicht gefunden");
+                //Debug.LogError("levelmanager in playerhealth nicht gefunden");
             }
         }
     }
@@ -47,7 +47,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         }
         else
         {
-            Debug.LogWarning("playerhealthbar ist in updatehealthbar null");
+            //Debug.LogWarning("playerhealthbar ist in updatehealthbar null");
         }
     }
 
@@ -55,7 +55,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     {
         PlayerPrefs.SetInt("PlayerHealth", currentHealth);
         PlayerPrefs.Save();
-        Debug.Log("gesundheit gespeichert: " + currentHealth);
+        //Debug.Log("gesundheit gespeichert: " + currentHealth);
     }
 
     public void LoadHealth()
@@ -63,12 +63,12 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         if (PlayerPrefs.HasKey("PlayerHealth"))
         {
             currentHealth = PlayerPrefs.GetInt("PlayerHealth");
-            Debug.Log("gesundheit geladen: " + currentHealth);
+            //Debug.Log("gesundheit geladen: " + currentHealth);
         }
         else
         {
             currentHealth = maxHealth;
-            Debug.Log("keinen gesundheitswert gefunden. setze 100 ein...");
+            //Debug.Log("keinen gesundheitswert gefunden. setze 100 ein...");
         }
         UpdateHealthBar(currentHealth);
     }
@@ -77,27 +77,27 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     {
         currentHealth = maxHealth;
         PlayerPrefs.SetInt("PlayerHealth", maxHealth);
-        Debug.Log("gesundheit auf 100 gesetzt");
+        //Debug.Log("gesundheit auf 100 gesetzt");
         UpdateHealthBar(currentHealth);
     }
 
     public void TakeDamage(int amount)
     {
         currentHealth -= amount;
-        Debug.Log("lebenspunkte des spielers: " + currentHealth);
+        //Debug.Log("lebenspunkte des spielers: " + currentHealth);
         if (playerHealthBar != null)
         {
             playerHealthBar.UpdateHealthBar(currentHealth);
         }
         else
         {
-            Debug.Log("playerhealthbar nicht zugewiesen...");
+            //Debug.Log("playerhealthbar nicht zugewiesen...");
         }
 
         OnHealthChange?.Invoke(currentHealth);
         if (currentHealth <= 0)
         {
-            Debug.Log("death");
+            //Debug.Log("death");
             levelManager.OnPlayerDeath();
         }
     }

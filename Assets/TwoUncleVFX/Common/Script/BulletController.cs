@@ -22,13 +22,9 @@ public class BulletController : MonoBehaviour
     {
         if (!isActive) return;
 
-        // Bewege das Projektil in die Richtung, in die es abgefeuert wurde
         transform.position += direction * movementSpeed * Time.deltaTime;
-
-        // Berechne die zurückgelegte Distanz
         curDistance = Vector3.Distance(startPosition, transform.position);
 
-        // Deaktiviere das Projektil, wenn es die maximale Distanz erreicht
         if (curDistance >= maxDistance)
         {
             ResetBullet();
@@ -41,8 +37,8 @@ public class BulletController : MonoBehaviour
     /// <param name="enemyTransform">Der Transform des Gegners</param>
     public void SetDirection(Transform enemyTransform)
     {
-        direction = enemyTransform.forward.normalized; // Setze die Richtung auf die Vorwärtsachse des Gegners
-        transform.rotation = Quaternion.LookRotation(direction); // Rotiert das Projektil in die Richtung
+        direction = enemyTransform.forward.normalized;
+        transform.rotation = Quaternion.LookRotation(direction);
     }
 
     /*private void OnTriggerEnter(Collider other)
@@ -61,6 +57,7 @@ public class BulletController : MonoBehaviour
     private void ResetBullet()
     {
         isActive = false;
-        gameObject.SetActive(false); // Deaktiviere das Projektil
+        //gameObject.SetActive(false);
+        BulletPoolManager.Instance.ReturnBullet(gameObject);
     }
 }

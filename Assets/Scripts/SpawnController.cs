@@ -33,7 +33,7 @@ public class SpawnController : MonoBehaviour
         drunkardsWalkInstance = dwInstance;
         if (drunkardsWalkInstance == null)
         {
-            Debug.LogError("dw-instanz nicht zugewiesen");
+            //Debug.LogError("dw-instanz nicht zugewiesen");
             return;
         }
     }
@@ -71,7 +71,7 @@ public class SpawnController : MonoBehaviour
             }
         }
 
-        Debug.Log("Manuelle Gegner registriert: " + allEnemies.Length);
+        //Debug.Log("Manuelle Gegner registriert: " + allEnemies.Length);
     }
 
     public void ClearPreviousSpawns()
@@ -133,7 +133,7 @@ public class SpawnController : MonoBehaviour
         {
             if (enemySpawnPositions.Count == 0)
             {
-                Debug.LogWarning("Keine verfügbaren Spawn-Positionen für weitere Gegner");
+                //Debug.LogWarning("Keine verfügbaren Spawn-Positionen für weitere Gegner");
                 break;
             }
 
@@ -191,7 +191,7 @@ public class SpawnController : MonoBehaviour
 
                 if (levelManager != null)
                 {
-                    Debug.Log("playercontroller wird levelmanager übergeben");
+                    //Debug.Log("playercontroller wird levelmanager übergeben");
                     PlayerController playerController = player.GetComponent<PlayerController>();
                     if (playerController != null)
                     {
@@ -201,13 +201,13 @@ public class SpawnController : MonoBehaviour
                 }
                 else
                 {
-                    Debug.LogError("levelmanager ist nicht gesetzt");
+                    //Debug.LogError("levelmanager ist nicht gesetzt");
                 }
                 StartCoroutine(InitializeCamera(player));
             }
             else
             {
-                Debug.Log("keine spawnposition mehr für den spieler verfügbar");
+                //Debug.Log("keine spawnposition mehr für den spieler verfügbar");
             }
         }
         else
@@ -226,11 +226,11 @@ public class SpawnController : MonoBehaviour
             mainCamera.gameObject.SetActive(true);
             mainCamera.enabled = true;
             mainCamera.tag = "MainCamera";
-            Debug.Log("main camera läuft: " + mainCamera.name);
+            //Debug.Log("main camera läuft: " + mainCamera.name);
         }
         else
         {
-            Debug.LogError("Keine Kamera im Player-Objekt gefunden!");
+            //Debug.LogError("Keine Kamera im Player-Objekt gefunden!");
         }
     }
 
@@ -240,7 +240,7 @@ public class SpawnController : MonoBehaviour
         {
             if (itemSpawnPositions.Count == 0)
             {
-                Debug.LogWarning("Keine verfügbaren Spawn-Positionen für mehr Munition");
+                //Debug.LogWarning("Keine verfügbaren Spawn-Positionen für mehr Munition");
                 break;
             }
             int randomIndex = Random.Range(0, itemSpawnPositions.Count);
@@ -259,7 +259,7 @@ public class SpawnController : MonoBehaviour
         {
             if (itemSpawnPositions.Count == 0)
             {
-                Debug.LogWarning("Keine verfügbaren Spawn-Positionen für mehr bandagen");
+                //Debug.LogWarning("Keine verfügbaren Spawn-Positionen für mehr bandagen");
                 break;
             }
             int randomIndex = Random.Range(0, itemSpawnPositions.Count);
@@ -278,7 +278,7 @@ public class SpawnController : MonoBehaviour
         {
             if (itemSpawnPositions.Count == 0)
             {
-                Debug.LogWarning("Keine verfügbaren Spawn-Positionen für mehr bandagen");
+                //Debug.LogWarning("Keine verfügbaren Spawn-Positionen für mehr bandagen");
                 break;
             }
             int randomIndex = Random.Range(0, itemSpawnPositions.Count);
@@ -300,7 +300,7 @@ public class SpawnController : MonoBehaviour
 
             if (spawnedEnemies.Count == 0)
             {
-                Debug.Log("level geschafft");
+                //Debug.Log("level geschafft");
                 yield break;
             }
         }

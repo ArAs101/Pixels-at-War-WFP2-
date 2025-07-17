@@ -16,7 +16,7 @@ public class PlayerHealthBar : MonoBehaviour
             playerHealth = GameObject.FindWithTag("Player")?.GetComponent<PlayerHealth>();
             if (playerHealth == null)
             {
-                Debug.LogError("PlayerHealth-Komponente im Spielerobjekt nicht gefunden.");
+                //Debug.LogError("PlayerHealth-Komponente im Spielerobjekt nicht gefunden.");
             }
         }
 
@@ -25,7 +25,7 @@ public class PlayerHealthBar : MonoBehaviour
             fillImage = transform.Find("Fill Area/Fill")?.GetComponent<Image>();
             if (fillImage == null)
             {
-                Debug.LogError("Fill Image-Objekt nicht gefunden.");
+                //Debug.LogError("Fill Image-Objekt nicht gefunden.");
             }
         }
 
@@ -34,7 +34,7 @@ public class PlayerHealthBar : MonoBehaviour
             slider = GetComponent<Slider>();
             if (slider == null)
             {
-                Debug.LogError("Slider-Komponente im PlayerHealthBar nicht gefunden.");
+                //Debug.LogError("Slider-Komponente im PlayerHealthBar nicht gefunden.");
             }
         }
 
@@ -47,7 +47,7 @@ public class PlayerHealthBar : MonoBehaviour
 
     public void UpdateHealthBar(int currentHealth)
     {
-        Debug.Log("aktualisierte gesundheitsanzeige: " + currentHealth);
+        //Debug.Log("aktualisierte gesundheitsanzeige: " + currentHealth);
         slider.value = currentHealth;
         fillImage.gameObject.SetActive(slider.value > 0);
         if (slider.value <= 0)
