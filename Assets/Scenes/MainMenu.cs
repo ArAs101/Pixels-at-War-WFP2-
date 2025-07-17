@@ -61,7 +61,7 @@ public class MenuManager : MonoBehaviour
     {
         isNewGame = true;
         PlayerPrefs.DeleteAll();
-        SceneManager.LoadScene("LevelC");
+        SceneManager.LoadScene("GameScene");
     }
 
     public void LoadGame()
