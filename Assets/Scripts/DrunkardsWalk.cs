@@ -6,7 +6,7 @@ public class DrunkardsWalk : MonoBehaviour
     [Header("Grid Settings")]
     public int width = 50;
     public int length = 50;
-    public int walkSteps = 9000;
+    int walkSteps = 3750;
 
     [Header("Tile Prefab")]
     public GameObject newWall;
@@ -17,6 +17,7 @@ public class DrunkardsWalk : MonoBehaviour
     private Vector3 planeSize;
     private Vector3 gridOffset;
     public int[,] grid;
+    public Transform wallParent;
 
     void Start()
     {
@@ -32,6 +33,8 @@ public class DrunkardsWalk : MonoBehaviour
             width = Mathf.RoundToInt(planeSize.x);
             length = Mathf.RoundToInt(planeSize.z);
         }
+
+        wallParent = new GameObject("WallParent").transform;
     }
 
     public void GenerateGrid()
@@ -41,7 +44,7 @@ public class DrunkardsWalk : MonoBehaviour
         {
             for (int y = 0; y < length; y++)
             {
-                grid[x, y] = 1; // 1 bedeutet Wand
+                grid[x, y] = 1;
             }
         }
     }
@@ -87,9 +90,11 @@ public class DrunkardsWalk : MonoBehaviour
                 if (grid[x, y] == 1)
                 {
                     Vector3 pos = new Vector3(x + 0.5f, 0f, y + 0.5f);
-                    Instantiate(newWall, pos, Quaternion.identity);
+                    GameObject wall = Instantiate(newWall, pos, Quaternion.identity, wallParent);
+                    //Instantiate(newWall, pos, Quaternion.identity);
                 }
             }
         }
+        wallParent.gameObject.AddComponent<CombineWalls>().Combine();
     }
 }

@@ -25,7 +25,7 @@ public class SpikeyEnemy : MonoBehaviour, IDamageable
     public void TakeDamage(int amount)
     {
         health -= amount;
-        Debug.Log("lebenspunkte des gegners: " + health);
+        //Debug.Log("lebenspunkte des gegners: " + health);
         healthBar.UpdateHealthBar(health, 100);
         if (health <= 0)
         {

@@ -33,27 +33,27 @@ public class Gun : MonoBehaviour
             ammoFraction = GameObject.Find("AmmoFraction").GetComponent<TextMeshProUGUI>();
             if (ammoFraction == null)
             {
-                Debug.LogError("ammofraction nicht gefunden");
+                //Debug.LogError("ammofraction nicht gefunden");
             }
             else
             {
-                Debug.Log("ammofraction gefunden");
+                //Debug.Log("ammofraction gefunden");
             }
         }
         if (particles != null)
         {
-            Debug.Log("Particles assigned: " + particles.name);
+            //Debug.Log("Particles assigned: " + particles.name);
         }
         else
         {
-            Debug.LogWarning("Particles reference is missing or destroyed!");
+            //Debug.LogWarning("Particles reference is missing or destroyed!");
         }
         if (playerInventory == null)
         {
             playerInventory = GameObject.FindObjectOfType<Inventory>();
             if (playerInventory == null)
             {
-                Debug.LogError("inventar nicht gefunden");
+                //Debug.LogError("inventar nicht gefunden");
             }
         }
         if (gunAnimator == null)
@@ -65,12 +65,12 @@ public class Gun : MonoBehaviour
             reloadText = GameObject.Find("ReloadText").GetComponent<TextMeshProUGUI>();
             if (reloadText == null)
             {
-                Debug.LogWarning("textfeld nicht gefunden");
+                //Debug.LogWarning("textfeld nicht gefunden");
             }
         }
         else
         {
-            Debug.LogWarning("textfeld gefunden");
+            //Debug.LogWarning("textfeld gefunden");
         }
     }
 
@@ -81,7 +81,7 @@ public class Gun : MonoBehaviour
             particles = GetComponentInChildren<ParticleSystem>();
             if (particles == null)
             {
-                Debug.LogWarning("Particles not found in children!");
+                //Debug.LogWarning("Particles not found in children!");
             }
         }
     }
@@ -154,7 +154,7 @@ public class Gun : MonoBehaviour
             IDamageable target = hit.collider.GetComponent<IDamageable>();
             if (target != null)
             {
-                Debug.Log(hit.collider.name);
+                //Debug.Log(hit.collider.name);
                 damage = Random.Range(10, 15);
                 target.TakeDamage(damage);
             }
@@ -166,7 +166,7 @@ public class Gun : MonoBehaviour
             }
             else
             {
-                Debug.LogWarning("impact referenz fehlt...");
+                //Debug.LogWarning("impact referenz fehlt...");
             }
         }
         currentAmmoInMagazine--;
@@ -184,19 +184,19 @@ public class Gun : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("ammofraction-element nicht zugewiesen");
+            //Debug.LogWarning("ammofraction-element nicht zugewiesen");
         }
     }
 
     private IEnumerator ReloadGun()
     {
         isReloading = true;
-        Debug.Log("nachladen...");
+        //Debug.Log("nachladen...");
         gunAnimator.GetComponent<Animation>().Play();
         yield return new WaitForSeconds(reloadTime);
         currentAmmoInMagazine = 30;
         playerInventory.ammoCurrentlyInInventory -= 1;
-        Debug.Log("nachgeladen, " + 30 + " kugeln im magazin der ak74su");
+        //Debug.Log("nachgeladen, " + 30 + " kugeln im magazin der ak74su");
         playerInventory.UpdateInventoryDisplay();
         UpdateAmmoFraction();
     }

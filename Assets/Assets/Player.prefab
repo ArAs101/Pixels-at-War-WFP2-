@@ -67,7 +67,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 80
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
@@ -683,7 +683,6 @@ GameObject:
   - component: {fileID: 1285396690140148878}
   - component: {fileID: 3746363509491533178}
   - component: {fileID: 3408369723644768848}
-  - component: {fileID: 8608883665259468107}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -826,18 +825,6 @@ MonoBehaviour:
   playerHealth: {fileID: 1285396690140148878}
   playerInventory: {fileID: 0}
   gameObject: {fileID: 4983424528274352580}
---- !u!114 &8608883665259468107
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4983424528274352580}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 323b346cfa014dd42a6fd070cc71f850, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &4983424528274352582
 GameObject:
   m_ObjectHideFlags: 0
@@ -1545,7 +1532,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 0
   range: 100
-  fireRate: 15
   fpsCam: {fileID: 3761235593742148049}
   particles: {fileID: 7369912673375661071}
   impactEffect: {fileID: 7226583673155636401, guid: a2ab56839e1c9504ea9d141e95d0b16b, type: 3}

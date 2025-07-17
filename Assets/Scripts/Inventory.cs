@@ -30,12 +30,12 @@ public class Inventory : MonoBehaviour
         if (PlayerPrefs.HasKey("CheckpointLevel"))
         {
             LoadCurrentInventory();
-            Debug.Log($"Anzeige aktualisieren: FireRateLevelText = {fireRateLevel}, PrecisionLevelText = {precisionLevel}");
+            //Debug.Log($"Anzeige aktualisieren: FireRateLevelText = {fireRateLevel}, PrecisionLevelText = {precisionLevel}");
         }
         else
         {
             ResetInventory();
-            Debug.Log("keinen spielstand gefunden. setze inventar zurück");
+            //Debug.Log("keinen spielstand gefunden. setze inventar zurück");
         }
 
         inventoryPanel.SetActive(false);
@@ -73,7 +73,7 @@ public class Inventory : MonoBehaviour
         coinsText.text = coinsCurrentlyInInventory.ToString();
         fireRateLevelText.text = fireRateLevel.ToString();
         precisionLevelText.text = precisionLevel.ToString();
-        Debug.Log("updateinventorydisplay: level " + fireRateLevelText.text + " für feuergeschw., level " + precisionLevelText.text + " für präzision");
+        //Debug.Log("updateinventorydisplay: level " + fireRateLevelText.text + " für feuergeschw., level " + precisionLevelText.text + " für präzision");
     }
 
     public void LoadCurrentInventory()
@@ -83,9 +83,9 @@ public class Inventory : MonoBehaviour
         coinsCurrentlyInInventory = PlayerPrefs.GetInt("CheckpointCoins");
         fireRateLevel = PlayerPrefs.GetInt("CheckpointFireRateLevel");
         precisionLevel = PlayerPrefs.GetInt("CheckpointPrecisionLevel");
-        Debug.Log("lade inventar: " + ammoCurrentlyInInventory + " kugeln im inventar, " + bandagesCurrentlyInInventory + " bandagen im inventar, " + coinsCurrentlyInInventory + " münzen im inventar, level " + 
-            fireRateLevel + " feuergeschwindigkeit, level " + precisionLevel + " präzision");
-        Debug.Log($"FireRateLevel: {fireRateLevel}, PrecisionLevel: {precisionLevel}");
+        //Debug.Log("lade inventar: " + ammoCurrentlyInInventory + " kugeln im inventar, " + bandagesCurrentlyInInventory + " bandagen im inventar, " + coinsCurrentlyInInventory + " münzen im inventar, level " + 
+            //fireRateLevel + " feuergeschwindigkeit, level " + precisionLevel + " präzision");
+        //Debug.Log($"FireRateLevel: {fireRateLevel}, PrecisionLevel: {precisionLevel}");
 
     }
 
@@ -121,7 +121,7 @@ public class Inventory : MonoBehaviour
         fireRateLevelText.text = "1";
         precisionLevelText.text = "1";
         UpdateInventoryDisplay();
-        Debug.Log("inventar zurückgesetzt");
+        //Debug.Log("inventar zurückgesetzt");
     }
 
     public void IncreaseFireRateLevel()

@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Unity.AI.Navigation;
+using UnityEngine.AI;
 
 public class LevelManager : MonoBehaviour
 {
@@ -50,14 +51,14 @@ public class LevelManager : MonoBehaviour
 #if UNITY_WEBGL
 if (PlayerPrefs.HasKey("ExperimentAbgeschlossen") && PlayerPrefs.GetInt("ExperimentAbgeschlossen") == 1)
 {
-    Debug.Log("Spiel wurde bereits abgeschlossen. Beende Spiel.");
+    //Debug.Log("Spiel wurde bereits abgeschlossen. Beende Spiel.");
     SceneManager.LoadScene("MainMenuWelcome");
     yield break;
 }
 #endif
         currentLevel = level;
 
-        Debug.Log("level " + currentLevel + " wird initialisiert");
+        //Debug.Log("level " + currentLevel + " wird initialisiert");
         Time.timeScale = 1;
         spawnController.DeleteCollectables();
         dungeonGenerator.GenerateGrid();
@@ -72,7 +73,19 @@ if (PlayerPrefs.HasKey("ExperimentAbgeschlossen") && PlayerPrefs.GetInt("Experim
         spawnController.SpawnBandages(bandagesCount);
         spawnController.SpawnCoins(coinsCount);
         spawnController.SpawnEnemies(enemyCount);
-        navMeshSurface.BuildNavMesh();
+        //CheckNavMesh();
+        //if (GameObject.Find("CombinedWalls") != null)
+        //{
+        //    Debug.Log("CombinedWalls vorhanden – NavMesh kann jetzt gebaut werden.");
+        //    StartCoroutine(DelayedNavMeshBuild());
+        //}
+        //else
+        //{
+        //    Debug.LogWarning("CombinedWalls fehlen – NavMesh-Build wird übersprungen.");
+        //}
+
+        StartCoroutine(DelayedNavMeshBuild());
+        //navMeshSurface.BuildNavMesh();
 
         playerInventory = GameObject.FindObjectOfType<Inventory>();
         playerHealth = GameObject.FindObjectOfType<PlayerHealth>();
@@ -82,22 +95,65 @@ if (PlayerPrefs.HasKey("ExperimentAbgeschlossen") && PlayerPrefs.GetInt("Experim
 
         if (PlayerPrefs.HasKey("CheckpointLevel"))
         {
-            Debug.Log(PlayerPrefs.GetInt("CheckpointAmmo") + " kugeln im inventar, bandagen: " + PlayerPrefs.GetInt("CheckpointBandages") + ", gesundheit: "
-            + playerHealth.currentHealth + ", münzen: " + PlayerPrefs.GetInt("CheckpointCoins") + ", im magazin: " + PlayerPrefs.GetInt("CheckpointLoadedAmmo") +
-            ", feuergeschwindigkeitslevel: " + PlayerPrefs.GetInt("CheckpointFireRateLevel") + ", präzisionslevel: " + PlayerPrefs.GetInt("CheckpointPrecisionLevel"));
+            //Debug.Log(PlayerPrefs.GetInt("CheckpointAmmo") + " kugeln im inventar, bandagen: " + PlayerPrefs.GetInt("CheckpointBandages") + ", gesundheit: "
+            //+ playerHealth.currentHealth + ", münzen: " + PlayerPrefs.GetInt("CheckpointCoins") + ", im magazin: " + PlayerPrefs.GetInt("CheckpointLoadedAmmo") +
+            //", feuergeschwindigkeitslevel: " + PlayerPrefs.GetInt("CheckpointFireRateLevel") + ", präzisionslevel: " + PlayerPrefs.GetInt("CheckpointPrecisionLevel"));
             LoadCheckpoint();
         }
         else
         {
-            Debug.Log("keinen gespeicherten spielstand gefunden. starte neues spiel");
+            //Debug.Log("keinen gespeicherten spielstand gefunden. starte neues spiel");
         }
 
         levelIndicator.text = "Level " + currentLevel;
-        Debug.Log("Level " + currentLevel + " gestartet");
+        //Debug.Log("Level " + currentLevel + " gestartet");
 
-        Debug.Log("zu beginn des jeweiligen levels im levelmanager: " + playerInventory.ammoCurrentlyInInventory + " kugeln im inventar, bandagen: " + playerInventory.bandagesCurrentlyInInventory + ", gesundheit: "
-            + playerHealth.currentHealth + ", münzen: " + playerInventory.coinsCurrentlyInInventory + ", im magazin: " + playerInventory.ammoInLoadedMagazine + "im magazin: " + gun.currentAmmoInMagazine +
-            ", feuergeschw.: " + playerInventory.fireRateLevelText.text + ", präzision: " + playerInventory.precisionLevelText.text);
+        //Debug.Log("zu beginn des jeweiligen levels im levelmanager: " + playerInventory.ammoCurrentlyInInventory + " kugeln im inventar, bandagen: " + playerInventory.bandagesCurrentlyInInventory + ", gesundheit: "
+            //+ playerHealth.currentHealth + ", münzen: " + playerInventory.coinsCurrentlyInInventory + ", im magazin: " + playerInventory.ammoInLoadedMagazine + "im magazin: " + gun.currentAmmoInMagazine +
+            //", feuergeschw.: " + playerInventory.fireRateLevelText.text + ", präzision: " + playerInventory.precisionLevelText.text);
+    }
+
+    IEnumerator DelayedNavMeshBuild()
+    {
+        yield return null;
+
+        GameObject combined = GameObject.Find("CombinedWalls");
+        if (combined == null)
+        {
+            //Debug.LogWarning("CombinedWalls wurde nicht gefunden – NavMesh wird nicht gebaut.");
+            yield break;
+        }
+
+        MeshCollider mc = combined.GetComponent<MeshCollider>();
+        if (mc == null)
+        {
+            //Debug.LogWarning("CombinedWalls hat keinen MeshCollider – wird dem NavMesh nicht hinzugefügt.");
+            yield break;
+        }
+
+        List<NavMeshBuildSource> sources = new List<NavMeshBuildSource>();
+        NavMeshBuildSource source = new NavMeshBuildSource
+        {
+            shape = NavMeshBuildSourceShape.Mesh,
+            sourceObject = mc.sharedMesh,
+            transform = combined.transform.localToWorldMatrix,
+            area = 0
+        };
+        sources.Add(source);
+
+        Bounds bounds = new Bounds(Vector3.zero, new Vector3(1000, 1000, 1000)); // großzügiger Bereich
+
+        NavMeshData navMeshData = new NavMeshData();
+        NavMesh.AddNavMeshData(navMeshData);
+        NavMeshBuilder.BuildNavMeshData(
+            navMeshSurface.GetBuildSettings(),
+            sources,
+            bounds,
+            Vector3.zero,
+            Quaternion.identity
+        );
+
+        //Debug.Log("NavMesh erfolgreich gebaut mit CombinedWalls.");
     }
 
     public void SaveCheckpoint()
@@ -113,13 +169,13 @@ if (PlayerPrefs.HasKey("ExperimentAbgeschlossen") && PlayerPrefs.GetInt("Experim
             PlayerPrefs.SetInt("CheckpointFireRateLevel", int.Parse(playerInventory.fireRateLevelText.text));
             PlayerPrefs.SetInt("CheckpointPrecisionLevel", int.Parse(playerInventory.precisionLevelText.text));
             PlayerPrefs.Save();
-            Debug.Log("checkpoint gespeichert: level " + currentLevel + ", munition: " + playerInventory.ammoCurrentlyInInventory + ", bandagen: " + playerInventory.bandagesCurrentlyInInventory + ", gesundheit: " +
-                playerHealth.currentHealth + ", münzen: " + playerInventory.coinsCurrentlyInInventory + ", im magazin: " + playerInventory.ammoInLoadedMagazine + ", feuergeschwindigkeitslevel: " +
-                playerInventory.fireRateLevelText.text + ", präzisionslevel: " + playerInventory.precisionLevelText.text);
+            //Debug.Log("checkpoint gespeichert: level " + currentLevel + ", munition: " + playerInventory.ammoCurrentlyInInventory + ", bandagen: " + playerInventory.bandagesCurrentlyInInventory + ", gesundheit: " +
+                //playerHealth.currentHealth + ", münzen: " + playerInventory.coinsCurrentlyInInventory + ", im magazin: " + playerInventory.ammoInLoadedMagazine + ", feuergeschwindigkeitslevel: " +
+                //playerInventory.fireRateLevelText.text + ", präzisionslevel: " + playerInventory.precisionLevelText.text);
         }
         else
         {
-            Debug.LogError("inventar in savecheckpoint nicht gefunden");
+            //Debug.LogError("inventar in savecheckpoint nicht gefunden");
         }
     }
 
@@ -136,12 +192,12 @@ if (PlayerPrefs.HasKey("ExperimentAbgeschlossen") && PlayerPrefs.GetInt("Experim
             playerHealth.UpdateHealthBar(playerHealth.currentHealth);
             savedFireRateLevel = PlayerPrefs.GetInt("CheckpointFireRateLevel");
             savedPrecisionLevel = PlayerPrefs.GetInt("CheckpointPrecisionLevel");
-            Debug.Log("checkpoint geladen: level " + currentLevel + ", munition: " + savedAmmoCount + ", bandagen: " + savedBandagesCount + ", gesundheit: " + playerHealth.currentHealth + ", münzen: " + savedCoins
-                + ", im magazin: " + savedLoadedAmmo + ", feuergeschwindigkeitslevel: " + savedFireRateLevel + ", präzisionslevel: " + savedPrecisionLevel);
+            //Debug.Log("checkpoint geladen: level " + currentLevel + ", munition: " + savedAmmoCount + ", bandagen: " + savedBandagesCount + ", gesundheit: " + playerHealth.currentHealth + ", münzen: " + savedCoins
+                //+ ", im magazin: " + savedLoadedAmmo + ", feuergeschwindigkeitslevel: " + savedFireRateLevel + ", präzisionslevel: " + savedPrecisionLevel);
         }
         else
         {
-            Debug.LogWarning("keinen checkpoint gefunden. starte neues spiel...");
+            //Debug.LogWarning("keinen checkpoint gefunden. starte neues spiel...");
         }
     }
 
@@ -158,7 +214,7 @@ if (PlayerPrefs.HasKey("ExperimentAbgeschlossen") && PlayerPrefs.GetInt("Experim
         }
         else
         {
-            Debug.LogError("inventory ist nicht zugewiesen");
+            //Debug.LogError("inventory ist nicht zugewiesen");
         }
     }
 
@@ -174,7 +230,7 @@ if (PlayerPrefs.HasKey("ExperimentAbgeschlossen") && PlayerPrefs.GetInt("Experim
         }
         else
         {
-            Debug.LogError("deathscreen nicht zugewiesen");
+            //Debug.LogError("deathscreen nicht zugewiesen");
         }
     }
 
@@ -188,7 +244,7 @@ if (PlayerPrefs.HasKey("ExperimentAbgeschlossen") && PlayerPrefs.GetInt("Experim
         remainingEnemies--;
         if (remainingEnemies == 0)
         {
-            Debug.Log("Alle Gegner besiegt");
+            //Debug.Log("Alle Gegner besiegt");
             if (currentLevel == 3)
             {
                 ShowGameFinishedPanel();
@@ -212,7 +268,7 @@ if (PlayerPrefs.HasKey("ExperimentAbgeschlossen") && PlayerPrefs.GetInt("Experim
         }
         else
         {
-            Debug.LogError("Level-Done-Panel ist nicht zugewiesen!");
+            //Debug.LogError("Level-Done-Panel ist nicht zugewiesen!");
         }
     }
 
@@ -226,7 +282,7 @@ if (PlayerPrefs.HasKey("ExperimentAbgeschlossen") && PlayerPrefs.GetInt("Experim
         }
         else
         {
-            Debug.LogError("game-finished-panel ist nicht zugewiesen!");
+            //Debug.LogError("game-finished-panel ist nicht zugewiesen!");
         }
     }
 
@@ -236,7 +292,7 @@ if (PlayerPrefs.HasKey("ExperimentAbgeschlossen") && PlayerPrefs.GetInt("Experim
         levelDonePanel.SetActive(false);
         if (playerHealth == null)
         {
-            Debug.Log("playerhealth ist null");
+            //Debug.Log("playerhealth ist null");
             playerHealth = GameObject.FindObjectOfType<PlayerHealth>();
         }
         currentLevel++;
@@ -246,23 +302,23 @@ if (PlayerPrefs.HasKey("ExperimentAbgeschlossen") && PlayerPrefs.GetInt("Experim
 
     public void RestartCurrentLevelWithSavedProgress()
     {
-        Debug.Log("starte level neu...");
+        //Debug.Log("starte level neu...");
         deathScreen.SetActive(false);
         if (PlayerPrefs.HasKey("CheckpointLevel"))
         {
-            Debug.Log(PlayerPrefs.GetInt("CheckpointAmmo") + " kugeln im inventar, bandagen: " + PlayerPrefs.GetInt("CheckpointBandages") + ", gesundheit: "
-            + playerHealth.currentHealth + ", münzen: " + PlayerPrefs.GetInt("CheckpointCoins") + ", im magazin: " + PlayerPrefs.GetInt("CheckpointLoadedAmmo"));
+            //Debug.Log(PlayerPrefs.GetInt("CheckpointAmmo") + " kugeln im inventar, bandagen: " + PlayerPrefs.GetInt("CheckpointBandages") + ", gesundheit: "
+            //+ playerHealth.currentHealth + ", münzen: " + PlayerPrefs.GetInt("CheckpointCoins") + ", im magazin: " + PlayerPrefs.GetInt("CheckpointLoadedAmmo"));
             LoadCheckpoint();
         }
         else
         {
-            Debug.Log("kein checkpointlevel gefunden");
+            //Debug.Log("kein checkpointlevel gefunden");
             playerHealth.ResetHealth();
             playerInventory.ResetInventory();
         }
 
-        Debug.Log("in restartmethode: " + playerInventory.ammoCurrentlyInInventory + " kugeln im inventar, bandagen: " + playerInventory.bandagesCurrentlyInInventory + ", gesundheit: "
-            + playerHealth.currentHealth + ", münzen: " + playerInventory.coinsCurrentlyInInventory + ", im magazin: " + playerInventory.ammoInLoadedMagazine);
+        //Debug.Log("in restartmethode: " + playerInventory.ammoCurrentlyInInventory + " kugeln im inventar, bandagen: " + playerInventory.bandagesCurrentlyInInventory + ", gesundheit: "
+            //+ playerHealth.currentHealth + ", münzen: " + playerInventory.coinsCurrentlyInInventory + ", im magazin: " + playerInventory.ammoInLoadedMagazine);
 
         StartCoroutine(InitializeLevel(currentLevel));
     }

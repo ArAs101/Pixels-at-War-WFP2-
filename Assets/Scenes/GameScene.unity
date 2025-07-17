@@ -580,9 +580,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   width: 50
   length: 50
-  walkSteps: 10000
   newWall: {fileID: 9012939767862687210, guid: c8a81b386657e2f4db12e72d0c9e0ca9, type: 3}
   planeObject: {fileID: 1253699625}
+  wallParent: {fileID: 0}
 --- !u!4 &184239769
 Transform:
   m_ObjectHideFlags: 0
@@ -1677,6 +1677,37 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 21.936005, y: 23.996885, z: 20.470247}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &541723646
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 541723647}
+  m_Layer: 0
+  m_Name: BulletPoolManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &541723647
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 541723646}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 42.62022, y: -17.557085, z: 66.883606}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6546,3 +6577,4 @@ SceneRoots:
   - {fileID: 490837187}
   - {fileID: 389224244}
   - {fileID: 701222382}
+  - {fileID: 541723647}
