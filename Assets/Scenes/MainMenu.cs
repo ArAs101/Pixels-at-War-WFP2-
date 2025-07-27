@@ -15,10 +15,10 @@ public class MenuManager : MonoBehaviour
     private void Start()
     {
         playerHealth = GameObject.FindObjectOfType<PlayerHealth>();
-        if (PlayerPrefs.GetInt("ExperimentAbgeschlossen", 0) == 1)
-        {
-            startButton.interactable = false;
-        }
+        //if (PlayerPrefs.GetInt("ExperimentAbgeschlossen", 0) == 1)
+        //{
+        //    startButton.interactable = false;
+        //}
     }
 
     private void OnDestroy()
@@ -61,7 +61,7 @@ public class MenuManager : MonoBehaviour
     {
         isNewGame = true;
         PlayerPrefs.DeleteAll();
-        SceneManager.LoadScene("GameScene");
+        SceneManager.LoadScene("LevelC");
     }
 
     public void LoadGame()

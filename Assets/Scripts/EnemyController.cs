@@ -44,6 +44,16 @@ public class EnemyController : MonoBehaviour
 
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
+        if (!agent.isOnNavMesh)
+        {
+            Debug.LogError(agent.name + " steht NICHT auf dem NavMesh!");
+        }
+        else
+        {
+            Debug.Log(agent.name + " steht korrekt auf dem NavMesh.");
+        }
+
+
         if (distanceToPlayer <= detectionRadius)
         {
             agent.SetDestination(player.position);
